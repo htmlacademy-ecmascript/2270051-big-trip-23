@@ -29,4 +29,25 @@ module.exports = {
       patterns: [{ from: 'public' }],
     }),
   ],
+
+  // Настройка модулей
+  module: {
+    // Правила для модулей
+    rules: [
+      {
+        // Применение правила к файлам с расширением .js
+        test: /\.js$/,
+        // Исключение node_modules из обработки этим правилом
+        exclude: /(node_modules)/,
+        // Использование Babel для транспиляции JavaScript
+        use: {
+          loader: "babel-loader",
+          options: {
+            // Использование пресета @babel/preset-env для поддержки современного JavaScript
+            presets: ['@babel/preset-env']
+          },
+        },
+      },
+    ]
+  }
 };
