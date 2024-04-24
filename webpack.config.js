@@ -4,6 +4,9 @@ const path = require('node:path');
 // Подключение плагина CopyPlugin для копирования файлов из одного места в другое
 const CopyPlugin = require('copy-webpack-plugin');
 
+// Подключение плагина HtmlPlugin для генерации HTML-файла на основе шаблона
+const HtmlPlugin = require('html-webpack-plugin');
+
 // Экспорт настроек Webpack
 module.exports = {
   // Точка входа в приложение
@@ -11,8 +14,8 @@ module.exports = {
 
   // Настройки выходного файла
   output: {
-    // Имя выходного файла
-    filename: 'bundle.js',
+    // Имя выходного файла с хешем контента для кэширования
+    filename: 'bundle.[contenthash].js',
     // Путь к выходному файлу
     path: path.resolve(__dirname, 'build'),
     // Очистка директории сборки перед каждой сборкой
@@ -24,9 +27,22 @@ module.exports = {
 
   // Настройка плагинов
   plugins: [
-    // Использование плагина CopyPlugin для копирования файлов из директории 'public'
+
+    // Использование плагина HtmlPlugin для генерации HTML-файла на основе шаблона
+    new HtmlPlugin({
+      template: 'public/index.html',
+    }),
+
+    // Использование плагина CopyPlugin для копирования файлов из директории 'public', игнорируя файл index.html
     new CopyPlugin({
-      patterns: [{ from: 'public' }],
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/index.html'],
+          },
+        },
+      ],
     }),
   ],
 
