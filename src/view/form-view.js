@@ -1,15 +1,15 @@
-import { createElement } from '../render.js';
-import {POINTS_TYPES, OFFERS } from '../constants.js';
+import {createElement} from '../render.js';
+import {POINTS_TYPES, OFFERS} from '../constants.js';
 
 // Функция создания разметки выбора типа точки маршрута
-const createPointTemplate = (type) =>`
+const createPointTemplate = (type) => `
   <div class="event__type-item">
     <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
     <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
   </div>`;
 
 // Функция создания разметки для отдельной дополнительной опции
-const createOffersItemTemplate = ((id, title, price, checked) => `
+const createOffersItemTemplate = ({id, title, price, checked}) => `
   <div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${checked ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-${id}">
@@ -17,21 +17,18 @@ const createOffersItemTemplate = ((id, title, price, checked) => `
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
     </label>
-  </div>`);
+  </div>`;
 
 // Функция создания разметки дополнительных опций
 const createOffersTemplate = () => {
-  let offersHTML = '';
-  for (let i = 0; i < OFFERS.length; i++) {
-    offersHTML += createOffersItemTemplate(OFFERS[i].id, OFFERS[i].title, OFFERS[i].price, OFFERS[i].checked);
-  }
+  const offersTemplate = OFFERS.reduce((accumulator, offer) => accumulator + createOffersItemTemplate(offer), '');
 
   return `
     <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        ${offersHTML}
+        ${offersTemplate}
       </div>
     </section>`;
 };
@@ -55,7 +52,8 @@ const createDestinationTemplate = () => `
 
 // Функция создания разметки всей формы
 const createFormTemplate = () => `
-  <form class="event event--edit" action="#" method="post">
+  <li class="trip-events__item">
+   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -107,7 +105,8 @@ const createFormTemplate = () => `
       ${createOffersTemplate()}
       ${createDestinationTemplate()}
     </section>
-  </form>`;
+  </form>
+  </li>`;
 
 export default class FormView {
   getTemplate() {

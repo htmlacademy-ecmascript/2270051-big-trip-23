@@ -15,11 +15,6 @@ export default class EventsListView {
     return this.element;
   }
 
-  // Добавляем элемент li в список ul
-  addItem(itemView) {
-    this.getElement().append(itemView.getElement());
-  }
-
   removeElement() {
     this.element = null;
   }

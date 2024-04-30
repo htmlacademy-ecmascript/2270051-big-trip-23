@@ -4,19 +4,19 @@ import FilterView from './view/filter-view.js';
 import { render, RenderPosition } from './render.js';
 
 // Поиск элементов в DOM, которые будут использоваться для рендеринга компонентов шапки сайта
-const pageHeader = document.querySelector('.page-header');
-const tripMain = pageHeader.querySelector('.trip-main');
-const tripFilters = pageHeader.querySelector('.trip-controls__filters');
-const pageMain = document.querySelector('.page-main');
-const tripEvents = pageMain.querySelector('.trip-events');
-
-// Создание экземпляра MainPresenter
-const mainPresenter = new MainPresenter({container: tripEvents});
+const pageHeaderElement = document.querySelector('.page-header');
+const tripMainElement = pageHeaderElement.querySelector('.trip-main');
+const tripFiltersElement = pageHeaderElement.querySelector('.trip-controls__filters');
+const pageMainElement = document.querySelector('.page-main');
+const tripEventsElement = pageMainElement.querySelector('.trip-events');
 
 // Рендеринг шапки сайта
-render(new TripInfoView(), tripMain, RenderPosition.AFTERBEGIN);
+render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 
 // Рендеринг фильтров
-render(new FilterView(), tripFilters);
+render(new FilterView(), tripFiltersElement);
+
+// Создание экземпляра MainPresenter
+const mainPresenter = new MainPresenter({container: tripEventsElement});
 
 mainPresenter.init();
