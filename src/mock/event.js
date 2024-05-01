@@ -43,12 +43,12 @@ const mockOffers = [
     offers: [
       {
         id: 'Nunc',
-        title: 'Nunc fermentum tortor',
+        title: 'Nunc fermentum',
         price: 100
       },
       {
         id: 'Phasellus',
-        title: 'Phasellus eros mauris',
+        title: 'Phasellus',
         price: 50
       }
     ]
@@ -58,12 +58,12 @@ const mockOffers = [
     offers: [
       {
         id: 'In',
-        title: 'In rutrum ac purus sit amet tempus',
+        title: 'In rutrum',
         price: 80
       },
       {
         id: 'Sed',
-        title: 'Sed blandit, eros',
+        title: 'Sed blandit',
         price: 15
       },
       {
@@ -83,7 +83,7 @@ const mockEvents = [
     dateTo: '2019-07-11T04:55:13.375Z',
     basePrice: 1100,
     offers: [
-      mockOffers[0].offers,
+      mockOffers[0].offers[0]
     ],
     isFavorite: false,
   },
@@ -94,7 +94,8 @@ const mockEvents = [
     dateTo: '2019-08-17T09:50:13.375Z',
     basePrice: 870,
     offers: [
-      mockOffers[1].offers,
+      mockOffers[1].offers[0],
+      mockOffers[1].offers[1],
     ],
     isFavorite: true,
   },
@@ -105,7 +106,9 @@ const mockEvents = [
     dateTo: '2019-09-25T13:35:13.375Z',
     basePrice: 1250,
     offers: [
-      mockOffers[2].offers,
+      mockOffers[2].offers[0],
+      mockOffers[2].offers[1],
+      mockOffers[2].offers[2]
     ],
     isFavorite: false,
   }

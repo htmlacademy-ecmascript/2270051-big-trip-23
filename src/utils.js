@@ -45,4 +45,7 @@ const getDuration = (dateFrom, dateTo) => {
   }
 };
 
-export { getRandomArrayElement, getRandomPhotosURL, getFormattedDate, getFormattedTime, getDuration };
+// Функция получения активного класса
+const getActiveClass = (isActive, activeClass) => isActive ? activeClass : '';
+
+export { getRandomArrayElement, getRandomPhotosURL, getFormattedDate, getFormattedTime, getDuration, getActiveClass };
