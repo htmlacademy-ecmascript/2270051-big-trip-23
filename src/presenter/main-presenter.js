@@ -4,19 +4,20 @@ import EventsListView from '../view/events-list-view.js';
 import EventView from '../view/event-view.js';
 import FormView from '../view/form-view.js';
 import { render, RenderPosition } from '../render.js';
-import { AMOUNT_OF_POINTS } from '../constants.js';
 
 export default class MainPresenter {
   sortComponent = new SortView();
   eventsListComponent = new EventsListView();
   formComponent = new FormView();
 
-  constructor({container}) {
+  constructor({container, eventsModel}) {
     this.container = container;
+    this.eventsModel = eventsModel;
   }
 
   // Точка входа для инициализации представления
   init() {
+    this.events = [...this.eventsModel.getEvents()];
 
     // Рендеринг сортировки
     render(this.sortComponent, this.container);
@@ -25,8 +26,8 @@ export default class MainPresenter {
     render(this.eventsListComponent, this.sortComponent.getElement(), RenderPosition.AFTEREND);
 
     // Рендеринг точек путешествия
-    for (let i = 0; i < AMOUNT_OF_POINTS; i++) {
-      const eventViewComponent = new EventView(); // Создаю новый экземпляр для каждой точки
+    for (let i = 0; i < this.events.length; i++) {
+      const eventViewComponent = new EventView({event: this.events[i]}); // Создаю новый экземпляр для каждой точки
       render(eventViewComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND);
     }
 

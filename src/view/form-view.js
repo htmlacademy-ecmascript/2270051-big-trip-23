@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {POINTS_TYPES, OFFERS} from '../constants.js';
+import { createElement } from '../render.js';
+import { POINTS_TYPES, OFFERS } from '../const.js';
 
 // Функция создания разметки выбора типа точки маршрута
 const createPointTemplate = (type) => `

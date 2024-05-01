@@ -1,7 +1,9 @@
 const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
 const POINTS_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
-const AMOUNT_OF_POINTS = 3;
+const EVENT_COUNT = 3;
+const PHOTO_COUNT = 5;
+const PHOTO_URL = 'https://loremflickr.com/248/152?random=';
 
 const OFFERS = [
   {
@@ -36,4 +38,4 @@ const OFFERS = [
   }
 ];
 
-export { SORT_TYPES, FILTER_TYPES, POINTS_TYPES, AMOUNT_OF_POINTS, OFFERS };
+export { SORT_TYPES, FILTER_TYPES, POINTS_TYPES, EVENT_COUNT, OFFERS, PHOTO_URL, PHOTO_COUNT };
