@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { POINTS_TYPES, OFFERS } from '../const.js';
+import { EVENTS_TYPES, OFFERS } from '../const.js';
 
 // Функция создания разметки выбора типа точки маршрута
 const createPointTemplate = (type) => `
@@ -65,7 +65,7 @@ const createFormTemplate = () => `
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${POINTS_TYPES.map((type) => createPointTemplate(type)).join('')}
+            ${EVENTS_TYPES.map((type) => createPointTemplate(type)).join('')}
           </fieldset>
         </div>
       </div>

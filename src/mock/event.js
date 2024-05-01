@@ -1,4 +1,5 @@
-import { getRandomArrayElement, getRandomPhotos } from '../utils.js';
+import { getRandomArrayElement, getRandomPhotosURL } from '../utils.js';
+import { EVENTS_TYPES } from '../const.js';
 
 // Пункт назначения
 const mockDestination = [
@@ -6,21 +7,21 @@ const mockDestination = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
     cityName: 'New York',
     photos: [
-      getRandomPhotos()
+      getRandomPhotosURL()
     ]
   },
   {
     description: 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
     cityName: 'London',
     photos: [
-      getRandomPhotos()
+      getRandomPhotosURL()
     ]
   },
   {
     description: ' Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
     cityName: 'Moscow',
     photos: [
-      getRandomPhotos()
+      getRandomPhotosURL()
     ]
   }
 ];
@@ -28,7 +29,7 @@ const mockDestination = [
 // Дополнительные опции
 const mockOffers = [
   {
-    type: 'taxi',
+    type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
         id: 'Upgrade',
@@ -38,7 +39,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'bus',
+    type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
         id: 'Nunc',
@@ -53,7 +54,7 @@ const mockOffers = [
     ]
   },
   {
-    type: 'train',
+    type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
         id: 'In',
@@ -77,9 +78,9 @@ const mockOffers = [
 const mockEvents = [
   {
     type: mockOffers[0].type,
-    destination: mockDestination[0].description,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    destination: mockDestination[0].cityName,
+    dateFrom: '2019-07-10T09:15:56.845Z',
+    dateTo: '2019-07-11T04:55:13.375Z',
     basePrice: 1100,
     offers: [
       mockOffers[0].offers,
@@ -88,9 +89,9 @@ const mockEvents = [
   },
   {
     type: mockOffers[1].type,
-    destination: mockDestination[1].description,
-    dateFrom: '2019-08-10T22:55:56.845Z',
-    dateTo: '2019-08-11T11:22:13.375Z',
+    destination: mockDestination[1].cityName,
+    dateFrom: '2019-08-15T09:45:56.845Z',
+    dateTo: '2019-08-17T09:50:13.375Z',
     basePrice: 870,
     offers: [
       mockOffers[1].offers,
@@ -99,9 +100,9 @@ const mockEvents = [
   },
   {
     type: mockOffers[2].type,
-    destination: mockDestination[2].description,
-    dateFrom: '2019-09-10T22:55:56.845Z',
-    dateTo: '2019-09-11T11:22:13.375Z',
+    destination: mockDestination[2].cityName,
+    dateFrom: '2019-09-25T13:00:56.845Z',
+    dateTo: '2019-09-25T13:35:13.375Z',
     basePrice: 1250,
     offers: [
       mockOffers[2].offers,

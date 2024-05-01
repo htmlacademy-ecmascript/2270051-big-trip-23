@@ -1,9 +1,11 @@
 const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
-const POINTS_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const EVENTS_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const EVENT_COUNT = 3;
 const PHOTO_COUNT = 5;
 const PHOTO_URL = 'https://loremflickr.com/248/152?random=';
+const DATE_FORMAT = 'MMM DD';
+const TIME_FORMAT = 'HH:mm';
 
 const OFFERS = [
   {
@@ -38,4 +40,4 @@ const OFFERS = [
   }
 ];
 
-export { SORT_TYPES, FILTER_TYPES, POINTS_TYPES, EVENT_COUNT, OFFERS, PHOTO_URL, PHOTO_COUNT };
+export { SORT_TYPES, FILTER_TYPES, EVENTS_TYPES, EVENT_COUNT, OFFERS, PHOTO_URL, PHOTO_COUNT, DATE_FORMAT, TIME_FORMAT };
