@@ -55,7 +55,7 @@ const createPhotosTemplate = (photos) => {
 
   // Создаем картинки
   const photosList = photos.map((photo) => `
-    <img class="event__photo" src="${photo}" alt="Event photo">`
+    <img class="event__photo" src="${photo.src}" alt="${photo.description}">`
   ).join('');
 
   // Возвращаем обернутый блок картинок
@@ -84,13 +84,13 @@ const createDestinationTemplate = (description, photos) => {
 
 // Функция создания разметки всей формы
 const createFormTemplate = (data) => {
-  const {type, destination, basePrice, offers} = data;
+  const {type, destination, description, pictures, basePrice, offers} = data;
 
   // Отрисовка блока дополнительных опций
   const offersTemplate = createOffersTemplate(offers);
 
   // Отрисовка блока места назначения
-  const destinationTemplate = createDestinationTemplate(destination.description, destination.photos);
+  const destinationTemplate = createDestinationTemplate(description, pictures);
 
   // !TODO доделать атрибут value в классе event__field-group--time
 
@@ -117,7 +117,7 @@ const createFormTemplate = (data) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.cityName}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>

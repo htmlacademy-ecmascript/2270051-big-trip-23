@@ -1,23 +1,53 @@
-import { getRandomArrayElement, getRandomPhotosURL } from '../utils.js';
+import { getRandomArrayElement } from '../utils.js';
 import { EVENTS_TYPES } from '../const.js';
 
 // Пункт назначения
 const mockDestination = [
   {
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-    cityName: 'New York',
-    photos: getRandomPhotosURL()
+    id: '1',
+    description: 'New York ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
+    name: 'New York',
+    pictures: [
+      {
+        src: 'https://loremflickr.com/248/152?random=1',
+        description: 'New York picture 1'
+      }
+    ]
   },
   {
-    description: 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
-    cityName: 'London',
-    photos: getRandomPhotosURL()
+    id: '2',
+    description: 'London ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
+    name: 'London',
+    pictures: [
+      {
+        src: 'https://loremflickr.com/248/152?random=2',
+        description: 'London picture 2'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=3',
+        description: 'London picture 3'
+      }
+    ]
   },
   {
-    description: 'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-    cityName: 'Moscow',
-    photos: getRandomPhotosURL()
-  }
+    id: '3',
+    description: 'Moscow ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
+    name: 'Moscow',
+    pictures: [
+      {
+        src: 'https://loremflickr.com/248/152?random=4',
+        description: 'Moscow picture 4'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=5',
+        description: 'Moscow picture 5'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=6',
+        description: 'Moscow picture 6'
+      }
+    ]
+  },
 ];
 
 // Дополнительные опции
@@ -26,10 +56,9 @@ const mockOffers = [
     type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
-        id: 'Upgrade',
-        title: 'Upgrade to a business class',
-        price: 120,
-        checked: false
+        id: 'one',
+        title: 'one to a business class',
+        price: 120
       }
     ]
   },
@@ -37,16 +66,14 @@ const mockOffers = [
     type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
-        id: 'Nunc',
-        title: 'Nunc fermentum',
-        price: 100,
-        checked: false
+        id: 'two',
+        title: 'two fermentum',
+        price: 100
       },
       {
-        id: 'Phasellus',
-        title: 'Phasellus',
-        price: 50,
-        checked: true
+        id: 'three',
+        title: 'three',
+        price: 50
       }
     ]
   },
@@ -54,22 +81,19 @@ const mockOffers = [
     type: getRandomArrayElement(EVENTS_TYPES),
     offers: [
       {
-        id: 'In',
-        title: 'In rutrum',
-        price: 80,
-        checked: true
+        id: 'four',
+        title: 'four rutrum',
+        price: 80
       },
       {
-        id: 'Sed',
-        title: 'Sed blandit',
-        price: 15,
-        checked: true
+        id: 'five',
+        title: 'five blandit',
+        price: 15
       },
       {
-        id: 'Nullam',
-        title: 'Nullam nunc ex',
-        price: 25,
-        checked: false
+        id: 'six',
+        title: 'six nunc ex',
+        price: 25
       }
     ]
   }
@@ -77,224 +101,52 @@ const mockOffers = [
 
 const mockEvents = [
   {
-    type: mockOffers[0].type,
-    destination: {
-      description: mockDestination[0].description,
-      cityName: mockDestination[0].cityName,
-      photos: ''
-    },
+    id: '11',
+    basePrice: 1100,
     dateFrom: '2019-07-10T09:15:56.845Z',
     dateTo: '2019-07-11T04:55:13.375Z',
-    basePrice: 1100,
+    destination: mockDestination[0].name,
+    description: mockDestination[0].description,
+    pictures: mockDestination[0].pictures,
+    isFavorite: false,
     offers: [
       mockOffers[0].offers[0]
     ],
-    isFavorite: false,
+    type: mockOffers[0].type
   },
   {
-    type: mockOffers[1].type,
-    destination: {
-      description: '',
-      cityName: mockDestination[1].cityName,
-      photos: ''
-    },
-    dateFrom: '2019-08-15T09:45:56.845Z',
-    dateTo: '2019-08-17T09:50:13.375Z',
-    basePrice: 870,
+    id: '22',
+    basePrice: 900,
+    dateFrom: '2019-08-02T09:15:56.845Z',
+    dateTo: '2019-08-02T09:55:13.375Z',
+    destination: mockDestination[1].name,
+    description: mockDestination[1].description,
+    pictures: mockDestination[1].pictures,
+    isFavorite: true,
     offers: [
       mockOffers[1].offers[0],
-      mockOffers[1].offers[1],
+      mockOffers[1].offers[1]
     ],
-    isFavorite: true,
+    type: mockOffers[1].type
   },
   {
-    type: mockOffers[2].type,
-    destination: {
-      description: mockDestination[2].description,
-      cityName: mockDestination[2].cityName,
-      photos: mockDestination[2].photos
-    },
-    dateFrom: '2019-09-25T13:00:56.845Z',
-    dateTo: '2019-09-25T13:35:13.375Z',
-    basePrice: 1250,
-    offers: [
-      mockOffers[2].offers[0],
-      mockOffers[2].offers[1],
-      mockOffers[2].offers[2]
-    ],
+    id: '33',
+    basePrice: 875,
+    dateFrom: '2019-09-15T09:15:56.845Z',
+    dateTo: '2019-09-17T04:55:13.375Z',
+    destination: mockDestination[2].name,
+    description: mockDestination[2].description,
+    pictures: mockDestination[2].pictures,
     isFavorite: false,
-  },
-  {
-    type: mockOffers[1].type,
-    destination: {
-      description: mockDestination[1].description,
-      cityName: mockDestination[1].cityName,
-      photos: mockDestination[1].photos
-    },
-    dateFrom: '2019-09-25T13:00:56.845Z',
-    dateTo: '2019-09-25T13:35:13.375Z',
-    basePrice: 1250,
-    offers: [],
-    isFavorite: true,
-  },
-  {
-    type: mockOffers[2].type,
-    destination: {
-      description: mockDestination[2].description,
-      cityName: mockDestination[2].cityName,
-      photos: mockDestination[2].photos
-    },
-    dateFrom: '2019-09-25T13:00:56.845Z',
-    dateTo: '2019-09-25T13:35:13.375Z',
-    basePrice: 1250,
     offers: [
       mockOffers[2].offers[0],
       mockOffers[2].offers[1],
       mockOffers[2].offers[2]
     ],
-    isFavorite: true,
+    type: mockOffers[2].type
   }
 ];
 
 const getRandomEvent = () => getRandomArrayElement(mockEvents);
 
 export { getRandomEvent };
-
-// import { getRandomArrayElement, getRandomPhotosURL } from '../utils.js';
-// import { EVENTS_TYPES } from '../const.js';
-//
-// // Пункт назначения
-// const mockDestination = [
-//   {
-//     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
-//     cityName: 'New York',
-//     photos: [
-//       getRandomPhotosURL()
-//     ]
-//   },
-//   {
-//     description: 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
-//     cityName: 'London',
-//     photos: [
-//       getRandomPhotosURL()
-//     ]
-//   },
-//   {
-//     description: 'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-//     cityName: 'Moscow',
-//     photos: [
-//       getRandomPhotosURL()
-//     ]
-//   }
-// ];
-//
-// // Дополнительные опции
-// const mockOffers = [
-//   {
-//     type: getRandomArrayElement(EVENTS_TYPES),
-//     offers: [
-//       {
-//         id: 'Upgrade',
-//         title: 'Upgrade to a business class',
-//         price: 120,
-//         checked: false
-//       }
-//     ]
-//   },
-//   {
-//     type: getRandomArrayElement(EVENTS_TYPES),
-//     offers: [
-//       {
-//         id: 'Nunc',
-//         title: 'Nunc fermentum',
-//         price: 100,
-//         checked: false
-//       },
-//       {
-//         id: 'Phasellus',
-//         title: 'Phasellus',
-//         price: 50,
-//         checked: true
-//       }
-//     ]
-//   },
-//   {
-//     type: getRandomArrayElement(EVENTS_TYPES),
-//     offers: [
-//       {
-//         id: 'In',
-//         title: 'In rutrum',
-//         price: 80,
-//         checked: true
-//       },
-//       {
-//         id: 'Sed',
-//         title: 'Sed blandit',
-//         price: 15,
-//         checked: true
-//       },
-//       {
-//         id: 'Nullam',
-//         title: 'Nullam nunc ex',
-//         price: 25,
-//         checked: false
-//       }
-//     ]
-//   }
-// ];
-//
-// const mockEvents = [
-//   {
-//     type: mockOffers[0].type,
-//     destination: [
-//       mockDestination[0].description,
-//       mockDestination[0].cityName,
-//       mockDestination[0].photos
-//     ],
-//     dateFrom: '2019-07-10T09:15:56.845Z',
-//     dateTo: '2019-07-11T04:55:13.375Z',
-//     basePrice: 1100,
-//     offers: [
-//       mockOffers[0].offers[0]
-//     ],
-//     isFavorite: false,
-//   },
-//   {
-//     type: mockOffers[1].type,
-//     destination: [
-//       mockDestination[1].description,
-//       mockDestination[1].cityName,
-//       mockDestination[1].photos
-//     ],
-//     dateFrom: '2019-08-15T09:45:56.845Z',
-//     dateTo: '2019-08-17T09:50:13.375Z',
-//     basePrice: 870,
-//     offers: [
-//       mockOffers[1].offers[0],
-//       mockOffers[1].offers[1],
-//     ],
-//     isFavorite: true,
-//   },
-//   {
-//     type: mockOffers[2].type,
-//     destination: [
-//       mockDestination[2].description,
-//       mockDestination[2].cityName,
-//       mockDestination[2].photos
-//     ],
-//     dateFrom: '2019-09-25T13:00:56.845Z',
-//     dateTo: '2019-09-25T13:35:13.375Z',
-//     basePrice: 1250,
-//     offers: [
-//       mockOffers[2].offers[0],
-//       mockOffers[2].offers[1],
-//       mockOffers[2].offers[2]
-//     ],
-//     isFavorite: false,
-//   }
-// ];
-//
-// const getRandomEvent = () => getRandomArrayElement(mockEvents);
-//
-// export { getRandomEvent };
-
