@@ -1,5 +1,5 @@
 import { getRandomArrayElement } from '../utils.js';
-import { EVENTS_TYPES } from '../const.js';
+import { EVENTS_TYPES, PHOTO_URL} from '../const.js';
 
 // Пункт назначения
 const mockDestination = [
@@ -9,7 +9,7 @@ const mockDestination = [
     name: 'New York',
     pictures: [
       {
-        src: 'https://loremflickr.com/248/152?random=1',
+        src: `${PHOTO_URL}1`,
         description: 'New York picture 1'
       }
     ]
@@ -20,11 +20,11 @@ const mockDestination = [
     name: 'London',
     pictures: [
       {
-        src: 'https://loremflickr.com/248/152?random=2',
+        src: `${PHOTO_URL}2`,
         description: 'London picture 2'
       },
       {
-        src: 'https://loremflickr.com/248/152?random=3',
+        src: `${PHOTO_URL}3`,
         description: 'London picture 3'
       }
     ]
@@ -35,15 +35,15 @@ const mockDestination = [
     name: 'Moscow',
     pictures: [
       {
-        src: 'https://loremflickr.com/248/152?random=4',
+        src: `${PHOTO_URL}4`,
         description: 'Moscow picture 4'
       },
       {
-        src: 'https://loremflickr.com/248/152?random=5',
+        src: `${PHOTO_URL}5`,
         description: 'Moscow picture 5'
       },
       {
-        src: 'https://loremflickr.com/248/152?random=6',
+        src: `${PHOTO_URL}6`,
         description: 'Moscow picture 6'
       }
     ]
@@ -105,9 +105,7 @@ const mockEvents = [
     basePrice: 1100,
     dateFrom: '2019-07-10T09:15:56.845Z',
     dateTo: '2019-07-11T04:55:13.375Z',
-    destination: mockDestination[0].name,
-    description: mockDestination[0].description,
-    pictures: mockDestination[0].pictures,
+    destination: mockDestination[0],
     isFavorite: false,
     offers: [
       mockOffers[0].offers[0]
@@ -119,9 +117,7 @@ const mockEvents = [
     basePrice: 900,
     dateFrom: '2019-08-02T09:15:56.845Z',
     dateTo: '2019-08-02T09:55:13.375Z',
-    destination: mockDestination[1].name,
-    description: mockDestination[1].description,
-    pictures: mockDestination[1].pictures,
+    destination: mockDestination[1],
     isFavorite: true,
     offers: [
       mockOffers[1].offers[0],
@@ -134,9 +130,7 @@ const mockEvents = [
     basePrice: 875,
     dateFrom: '2019-09-15T09:15:56.845Z',
     dateTo: '2019-09-17T04:55:13.375Z',
-    destination: mockDestination[2].name,
-    description: mockDestination[2].description,
-    pictures: mockDestination[2].pictures,
+    destination: mockDestination[2],
     isFavorite: false,
     offers: [
       mockOffers[2].offers[0],

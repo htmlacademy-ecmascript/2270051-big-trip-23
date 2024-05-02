@@ -52,7 +52,6 @@ const createPhotosTemplate = (photos) => {
   if (!photos || photos.length === 0) {
     return ''; // Возвращаем пустую строку, если photos пуст или не существует
   }
-
   // Создаем картинки
   const photosList = photos.map((photo) => `
     <img class="event__photo" src="${photo.src}" alt="${photo.description}">`
@@ -84,15 +83,15 @@ const createDestinationTemplate = (description, photos) => {
 
 // Функция создания разметки всей формы
 const createFormTemplate = (data) => {
-  const {type, destination, description, pictures, basePrice, offers} = data;
+  const {type, destination, basePrice, offers} = data;
 
   // Отрисовка блока дополнительных опций
   const offersTemplate = createOffersTemplate(offers);
 
   // Отрисовка блока места назначения
-  const destinationTemplate = createDestinationTemplate(description, pictures);
+  const destinationTemplate = createDestinationTemplate(destination.description, destination.pictures);
 
-  // !TODO доделать атрибут value в классе event__field-group--time
+  // !TODO доделать атрибут value в классе event__field-group--time и прописать id
 
   return (
     `<li class="trip-events__item">
@@ -117,7 +116,12 @@ const createFormTemplate = (data) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+            <input class="event__input  event__input--destination"
+            id="event-destination-1"
+            type="text"
+            name="event-destination"
+            value="${destination.name}"
+            list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
