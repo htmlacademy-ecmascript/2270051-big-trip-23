@@ -7,12 +7,7 @@ const mockDestination = [
     id: '1',
     description: 'New York ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
     name: 'New York',
-    pictures: [
-      {
-        src: getRandomPhotoURL(),
-        description: 'New York picture 1'
-      }
-    ]
+    pictures: '',
   },
   {
     id: '2',
@@ -138,6 +133,16 @@ const mockEvents = [
       mockOffers[2].offers[2]
     ],
     type: mockOffers[2].type
+  },
+  {
+    id: '44',
+    basePrice: 300,
+    dateFrom: '2019-09-15T09:15:56.845Z',
+    dateTo: '2019-09-17T04:55:13.375Z',
+    destination: mockDestination[0],
+    isFavorite: false,
+    offers: [],
+    type: mockOffers[0].type
   }
 ];
 
