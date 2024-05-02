@@ -1,5 +1,5 @@
-import { getRandomArrayElement } from '../utils.js';
-import { EVENTS_TYPES, PHOTO_URL} from '../const.js';
+import { getRandomArrayElement, getRandomPhotoURL } from '../utils.js';
+import { EVENTS_TYPES } from '../const.js';
 
 // Пункт назначения
 const mockDestination = [
@@ -9,7 +9,7 @@ const mockDestination = [
     name: 'New York',
     pictures: [
       {
-        src: `${PHOTO_URL}1`,
+        src: getRandomPhotoURL(),
         description: 'New York picture 1'
       }
     ]
@@ -20,11 +20,11 @@ const mockDestination = [
     name: 'London',
     pictures: [
       {
-        src: `${PHOTO_URL}2`,
+        src: getRandomPhotoURL(),
         description: 'London picture 2'
       },
       {
-        src: `${PHOTO_URL}3`,
+        src: getRandomPhotoURL(),
         description: 'London picture 3'
       }
     ]
@@ -35,15 +35,15 @@ const mockDestination = [
     name: 'Moscow',
     pictures: [
       {
-        src: `${PHOTO_URL}4`,
+        src: getRandomPhotoURL(),
         description: 'Moscow picture 4'
       },
       {
-        src: `${PHOTO_URL}5`,
+        src: getRandomPhotoURL(),
         description: 'Moscow picture 5'
       },
       {
-        src: `${PHOTO_URL}6`,
+        src: getRandomPhotoURL(),
         description: 'Moscow picture 6'
       }
     ]

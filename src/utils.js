@@ -1,4 +1,4 @@
-import { PHOTO_COUNT, PHOTO_URL, DATE_FORMAT, TIME_FORMAT } from './const.js';
+import { PHOTO_URL, DATE_FORMAT, TIME_FORMAT } from './const.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
@@ -6,13 +6,9 @@ dayjs.extend(duration);
 const getRandomArrayElement = ((items) => items[Math.floor(Math.random() * items.length)]);
 
 // Функция для генерации случайных URL фотографий
-const getRandomPhotosURL = () => {
-  const photos = [];
-  for (let i = 0; i < PHOTO_COUNT; i++) {
-    const randomNumber = Math.floor(Math.random() * 100) + 1; // Генерируем случайное число от 1 до 100
-    photos.push(`${PHOTO_URL}${randomNumber}`);
-  }
-  return photos;
+const getRandomPhotoURL = () => {
+  const randomNumber = Math.floor(Math.random() * 100) + 1; // Генерируем случайное число от 1 до 100
+  return `${PHOTO_URL}${randomNumber}`;
 };
 
 // Функция для форматирования даты
@@ -48,4 +44,4 @@ const getDuration = (dateFrom, dateTo) => {
 // Функция получения активного класса
 const getActiveClass = (isActive, activeClass) => isActive ? activeClass : '';
 
-export { getRandomArrayElement, getRandomPhotosURL, getFormattedDate, getFormattedTime, getDuration, getActiveClass };
+export { getRandomArrayElement, getRandomPhotoURL, getFormattedDate, getFormattedTime, getDuration, getActiveClass };
