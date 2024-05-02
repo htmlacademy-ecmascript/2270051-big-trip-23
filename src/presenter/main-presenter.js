@@ -8,7 +8,6 @@ import { render, RenderPosition } from '../render.js';
 export default class MainPresenter {
   sortComponent = new SortView();
   eventsListComponent = new EventsListView();
-  formComponent = new FormView();
 
   constructor({container, eventsModel}) {
     this.container = container;
@@ -26,13 +25,13 @@ export default class MainPresenter {
     render(this.eventsListComponent, this.sortComponent.getElement(), RenderPosition.AFTEREND);
 
     // Рендеринг точек путешествия
-    for (let i = 0; i < this.events.length; i++) {
+    for (let i = 1; i < this.events.length; i++) {
       const eventViewComponent = new EventView({event: this.events[i]}); // Создаю новый экземпляр для каждой точки
       render(eventViewComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND);
     }
 
     // Рендеринг формы создания/редактирования точки путешествия
-    render(this.formComponent, this.eventsListComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(new FormView({event: this.events[0]}), this.eventsListComponent.getElement(), RenderPosition.AFTERBEGIN);
   }
 }
 
