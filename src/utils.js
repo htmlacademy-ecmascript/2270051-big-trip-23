@@ -1,21 +1,11 @@
-import { PHOTO_URL, DATE_FORMAT, TIME_FORMAT } from './const.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 const getRandomArrayElement = ((items) => items[Math.floor(Math.random() * items.length)]);
 
-// Функция для генерации случайных URL фотографий
-const getRandomPhotoURL = () => {
-  const randomNumber = Math.floor(Math.random() * 100) + 1; // Генерируем случайное число от 1 до 100
-  return `${PHOTO_URL}${randomNumber}`;
-};
-
 // Функция для форматирования даты
-const getFormattedDate = (dateString) => dayjs(dateString).format(DATE_FORMAT);
-
-// Функция для форматирования времени
-const getFormattedTime = (dateString) => dayjs(dateString).format(TIME_FORMAT);
+const getFormattedDate = (dateString, format) => dayjs(dateString).format(format);
 
 // Функция для вычисления продолжительности в днях, часах и минутах
 const getDuration = (dateFrom, dateTo) => {
@@ -34,14 +24,16 @@ const getDuration = (dateFrom, dateTo) => {
   // Форматируем длительность в строку в формате "DDDH HHM" или "HHM" или "MM"
   if (days > 0) {
     return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  } else if (hours > 0) {
-    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  } else {
-    return `${minutes}M`;
   }
+
+  if (hours > 0) {
+    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  }
+
+  return `${minutes}M`;
 };
 
 // Функция получения активного класса
 const getActiveClass = (isActive, activeClass) => isActive ? activeClass : '';
 
-export { getRandomArrayElement, getRandomPhotoURL, getFormattedDate, getFormattedTime, getDuration, getActiveClass };
+export { getRandomArrayElement, getFormattedDate, getDuration, getActiveClass };

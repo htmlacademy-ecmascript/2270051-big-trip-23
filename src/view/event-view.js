@@ -1,5 +1,6 @@
 import { createElement } from '../render.js';
-import { getFormattedDate, getFormattedTime, getDuration, getActiveClass } from '../utils.js';
+import { getFormattedDate, getDuration, getActiveClass } from '../utils.js';
+import { DATE_FORMATS } from '../const.js';
 
 const createOffersTemplate = (offers) => {
   if (!offers || offers.length === 0) {
@@ -18,34 +19,44 @@ const createOffersTemplate = (offers) => {
   return `<ul class="event__selected-offers">${offersList}</ul>`;
 };
 
-const createEventTemplate = (event) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = event;
+const createEventTemplate = (event, destinations, offers) => {
+  const {type, dateFrom, dateTo, basePrice, isFavorite} = event;
 
-  const date = getFormattedDate(dateFrom);
-  const startTime = getFormattedTime(dateFrom);
-  const endTime = getFormattedTime(dateTo);
+  // Ищем место назначения для данной точки маршрута
+  const eventDestination = destinations.find((destination) => destination.id === event.destination);
+
+  // Ищем сначала все дополнительные опции для данной точки маршрута, потом те, что были выбраны
+  const eventAllOffers = offers.find((offer) => offer.type === event.type).offers;
+  const eventOffers = eventAllOffers.filter((eventOffer) => event.offers.includes(eventOffer.id));
+
+  // Форматирование дат и времени, вычисление продолжительности события
+  const date = getFormattedDate(dateFrom, DATE_FORMATS['MMM DD']);
+  const datetime = getFormattedDate(dateFrom, DATE_FORMATS['YYYY-MM-DD']);
+  const startTime = getFormattedDate(dateFrom, DATE_FORMATS['HH:mm']);
+  const endTime = getFormattedDate(dateTo, DATE_FORMATS['HH:mm']);
+  const startDateTime = getFormattedDate(dateFrom, DATE_FORMATS['YYYY-MM-DDTHH:mm']);
+  const endDateTime = getFormattedDate(dateTo, DATE_FORMATS['YYYY-MM-DDTHH:mm']);
   const eventDuration = getDuration(dateFrom, dateTo);
+
+  // Динамическое изменения класса кнопки "Добавить в избранное"
   const favoriteButtonClass = getActiveClass(isFavorite, 'event__favorite-btn--active');
 
   // Отрисовка блока дополнительных опций
-  const offersTemplate = createOffersTemplate(offers);
-
-  // !TODO доделать атрибут datetime
-  // !TODO получить время в местном часовом поясе
+  const offersTemplate = createOffersTemplate(eventOffers);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${date}</time>
+        <time class="event__date" datetime="${datetime}">${date}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destination.name}</h3>
+        <h3 class="event__title">${type} ${eventDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${startTime}</time>
+            <time class="event__start-time" datetime="${startDateTime}">${startTime}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${endTime}</time>
+            <time class="event__end-time" datetime="${endDateTime}">${endTime}</time>
           </p>
           <p class="event__duration">${eventDuration}</p>
         </div>
@@ -68,12 +79,14 @@ const createEventTemplate = (event) => {
 };
 
 export default class EventView {
-  constructor({event}) {
+  constructor({event, destinations, offers}) {
     this.event = event;
+    this.destinations = destinations;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createEventTemplate(this.event);
+    return createEventTemplate(this.event, this.destinations, this.offers);
   }
 
   getElement() {
