@@ -12,7 +12,7 @@ const mockDestinations = [
     id: '1',
     description: 'New York ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
     name: 'New York',
-    pictures: '',
+    pictures: [],
   },
   {
     id: '2',
@@ -47,7 +47,7 @@ const mockDestinations = [
         description: 'Moscow picture 6'
       }
     ]
-  },
+  }
 ];
 
 export { mockDestinations };

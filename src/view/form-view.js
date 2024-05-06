@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { DATE_FORMATS, BLANK_EVENT } from '../const.js';
+import { BLANK_EVENT } from '../const.js';
 import { getFormattedDate } from '../utils.js';
 
 // Функция создания разметки выбора типа точки маршрута
@@ -25,8 +25,9 @@ const createOffersItemTemplate = ({id, title, price, checked}) => `
 
 // Функция создания разметки дополнительных опций
 const createOffersTemplate = (allOffers, eventOffers) => {
-  allOffers = allOffers || [];
-  eventOffers = eventOffers || [];
+  if (!allOffers || allOffers.length === 0) {
+    return ''; // Возвращаем пустую строку, если offers пуст или не существует
+  }
 
   const offersTemplate = allOffers.reduce((acc, offer) => {
     const checked = eventOffers.some((eventOffer) => eventOffer.id === offer.id);
@@ -45,8 +46,6 @@ const createOffersTemplate = (allOffers, eventOffers) => {
 
 // Функция создания картинок места назначения
 const createPhotosTemplate = (photos) => {
-  photos = photos || [];
-
   // Создаем картинки
   const photosList = photos.map((photo) => `
     <img class="event__photo" src="${photo.src}" alt="${photo.description}">`
@@ -63,7 +62,9 @@ const createPhotosTemplate = (photos) => {
 
 // Функция создания разметки места назначения
 const createDestinationTemplate = (description, photos) => {
-  description = description || [];
+  if (!description || description.length === 0) {
+    return ''; // Возвращаем пустую строку, если description пуст или не существует
+  }
 
   // Возвращаем блок разметки места назначения
   return `
@@ -78,6 +79,8 @@ const createDestinationTemplate = (description, photos) => {
 const createFormTemplate = (event, destinations, offers) => {
   const {type, dateFrom, dateTo, basePrice} = event;
 
+  const eventId = event.id || 0;
+
   // Получаем все типы точек маршрутов для выпадающего списка
   const eventTypes = offers.map((offer) => offer.type);
 
@@ -90,12 +93,6 @@ const createFormTemplate = (event, destinations, offers) => {
   // Ищем сначала все дополнительные опции для данной точки маршрута, потом те, что были выбраны
   const eventAllOffers = offers.find((offer) => offer.type === event.type)?.offers || [];
   const eventOffers = event.offers.map((offerId) => eventAllOffers.find((offer) => offer.id === offerId)).filter(Boolean);
-
-  const eventId = event.id || 0;
-
-  // Форматирование дат и времени, вычисление продолжительности события
-  const startTime = getFormattedDate(dateFrom, DATE_FORMATS['DD/MM/YY HH:mm']);
-  const endTime = getFormattedDate(dateTo, DATE_FORMATS['DD/MM/YY HH:mm']);
 
   // Отрисовка блока дополнительных опций
   const offersTemplate = createOffersTemplate(eventAllOffers, eventOffers);
@@ -143,14 +140,14 @@ const createFormTemplate = (event, destinations, offers) => {
             id="event-start-time-${eventId}"
             type="text"
             name="event-start-time"
-            value="${startTime}">
+            value="${getFormattedDate(dateFrom, 'DD/MM/YY HH:mm')}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${eventId}">To</label>
             <input class="event__input  event__input--time"
             id="event-end-time-${eventId}"
             type="text"
             name="event-end-time"
-            value="${endTime}">
+            value="${getFormattedDate(dateTo, 'DD/MM/YY HH:mm')}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
