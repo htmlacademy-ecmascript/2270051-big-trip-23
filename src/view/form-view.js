@@ -1,12 +1,16 @@
-import {createElement} from '../render.js';
-import {POINTS_TYPES, OFFERS} from '../constants.js';
+import { createElement } from '../render.js';
+import { BLANK_EVENT } from '../const.js';
+import { getFormattedDate } from '../utils.js';
 
 // Функция создания разметки выбора типа точки маршрута
-const createPointTemplate = (type) => `
+const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
+    <input id="event-type-${eventType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${eventType === type ? 'checked' : ''}>
+    <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-${eventId}">${eventType.charAt(0).toUpperCase() + eventType.slice(1)}</label>
   </div>`;
+
+// Функция создания элемента выпадающего списка городов для <datalist>
+const createDestinationOptionTemplate = (name) => `<option value="${name}"></option>`;
 
 // Функция создания разметки для отдельной дополнительной опции
 const createOffersItemTemplate = ({id, title, price, checked}) => `
@@ -20,8 +24,15 @@ const createOffersItemTemplate = ({id, title, price, checked}) => `
   </div>`;
 
 // Функция создания разметки дополнительных опций
-const createOffersTemplate = () => {
-  const offersTemplate = OFFERS.reduce((accumulator, offer) => accumulator + createOffersItemTemplate(offer), '');
+const createOffersTemplate = (allOffers, eventOffers) => {
+  if (!allOffers || allOffers.length === 0) {
+    return ''; // Возвращаем пустую строку, если offers пуст или не существует
+  }
+
+  const offersTemplate = allOffers.reduce((acc, offer) => {
+    const checked = eventOffers.some((eventOffer) => eventOffer.id === offer.id);
+    return acc + createOffersItemTemplate({...offer, checked});
+  }, '');
 
   return `
     <section class="event__section  event__section--offers">
@@ -33,84 +44,140 @@ const createOffersTemplate = () => {
     </section>`;
 };
 
-// Функция создания разметки места назначения
-const createDestinationTemplate = () => `
-  <section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+// Функция создания картинок места назначения
+const createPhotosTemplate = (photos) => {
+  // Создаем картинки
+  const photosList = photos.map((photo) => `
+    <img class="event__photo" src="${photo.src}" alt="${photo.description}">`
+  ).join('');
 
+  // Возвращаем обернутый блок картинок
+  return `
     <div class="event__photos-container">
       <div class="event__photos-tape">
-        <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-        <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+        ${photosList}
       </div>
-    </div>
+    </div>`;
+};
+
+// Функция создания разметки места назначения
+const createDestinationTemplate = (description, photos) => {
+  if (!description || description.length === 0) {
+    return ''; // Возвращаем пустую строку, если description пуст или не существует
+  }
+
+  // Возвращаем блок разметки места назначения
+  return `
+  <section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${description}</p>
+    ${createPhotosTemplate(photos)}
   </section>`;
+};
 
 // Функция создания разметки всей формы
-const createFormTemplate = () => `
-  <li class="trip-events__item">
-   <form class="event event--edit" action="#" method="post">
-    <header class="event__header">
-      <div class="event__type-wrapper">
-        <label class="event__type  event__type-btn" for="event-type-toggle-1">
-          <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
-        </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+const createFormTemplate = (event, destinations, offers) => {
+  const {type, dateFrom, dateTo, basePrice} = event;
 
-        <div class="event__type-list">
-          <fieldset class="event__type-group">
-            <legend class="visually-hidden">Event type</legend>
-            ${POINTS_TYPES.map((type) => createPointTemplate(type)).join('')}
-          </fieldset>
-        </div>
-      </div>
+  const eventId = event.id || 0;
 
-      <div class="event__field-group  event__field-group--destination">
-        <label class="event__label  event__type-output" for="event-destination-1">
-          Flight
-        </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
-        <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
-        </datalist>
-      </div>
+  // Получаем все типы точек маршрутов для выпадающего списка
+  const eventTypes = offers.map((offer) => offer.type);
 
-      <div class="event__field-group  event__field-group--time">
-        <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
-        &mdash;
-        <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
-      </div>
+  // Получаем все названия точек маршрутов для выпадающего списка
+  const destinationNames = destinations.map((destination) => destination.name);
 
-      <div class="event__field-group  event__field-group--price">
-        <label class="event__label" for="event-price-1">
-          <span class="visually-hidden">Price</span>
-          &euro;
-        </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
-      </div>
+  // Ищем место назначения для данной точки маршрута
+  const eventDestination = destinations.find((destination) => destination.id === event.destination);
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
-    </header>
-    <section class="event__details">
-      ${createOffersTemplate()}
-      ${createDestinationTemplate()}
-    </section>
-  </form>
-  </li>`;
+  // Ищем сначала все дополнительные опции для данной точки маршрута, потом те, что были выбраны
+  const eventAllOffers = offers.find((offer) => offer.type === event.type)?.offers || [];
+  const eventOffers = event.offers.map((offerId) => eventAllOffers.find((offer) => offer.id === offerId)).filter(Boolean);
+
+  // Отрисовка блока дополнительных опций
+  const offersTemplate = createOffersTemplate(eventAllOffers, eventOffers);
+
+  // Отрисовка блока места назначения
+  const destinationTemplate = createDestinationTemplate(eventDestination.description, eventDestination.pictures);
+
+  return (
+    `<li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
+        <header class="event__header">
+          <div class="event__type-wrapper">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${eventId}">
+              <span class="visually-hidden">Choose event type</span>
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            </label>
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${eventId}" type="checkbox">
+
+            <div class="event__type-list">
+              <fieldset class="event__type-group">
+                <legend class="visually-hidden">Event type</legend>
+                ${eventTypes.map((eventType) => createPointTemplate(eventType, eventId, type)).join('')}
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="event__field-group  event__field-group--destination">
+            <label class="event__label  event__type-output" for="event-destination-${eventId}">
+              ${type}
+            </label>
+            <input class="event__input  event__input--destination"
+            id="event-destination-${eventId}"
+            type="text"
+            name="event-destination"
+            value="${eventDestination.name}"
+            list="destination-list-${eventId}">
+            <datalist id="destination-list-${eventId}">
+              ${destinationNames.map((destinationName) => createDestinationOptionTemplate(destinationName)).join('')}
+            </datalist>
+          </div>
+
+          <div class="event__field-group  event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-${eventId}">From</label>
+            <input class="event__input  event__input--time"
+            id="event-start-time-${eventId}"
+            type="text"
+            name="event-start-time"
+            value="${getFormattedDate(dateFrom, 'DD/MM/YY HH:mm')}">
+            &mdash;
+            <label class="visually-hidden" for="event-end-time-${eventId}">To</label>
+            <input class="event__input  event__input--time"
+            id="event-end-time-${eventId}"
+            type="text"
+            name="event-end-time"
+            value="${getFormattedDate(dateTo, 'DD/MM/YY HH:mm')}">
+          </div>
+
+          <div class="event__field-group  event__field-group--price">
+            <label class="event__label" for="event-price-${eventId}">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input class="event__input  event__input--price" id="event-price-${eventId}" type="text" name="event-price" value="${basePrice}">
+          </div>
+
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
+        </header>
+        <section class="event__details">
+          ${offersTemplate}
+          ${destinationTemplate}
+        </section>
+      </form>
+    </li>`);
+};
 
 export default class FormView {
+  constructor({event = BLANK_EVENT, destinations, offers}) {
+    this.event = event;
+    this.destinations = destinations;
+    this.offers = offers;
+  }
+
   getTemplate() {
-    return createFormTemplate();
+    return createFormTemplate(this.event, this.destinations, this.offers);
   }
 
   getElement() {
