@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { BLANK_EVENT } from '../const.js';
 import { getFormattedDate } from '../utils.js';
 
@@ -169,26 +169,19 @@ const createFormTemplate = (event, destinations, offers) => {
     </li>`);
 };
 
-export default class FormView {
+export default class FormView extends AbstractView {
+  #event = null;
+  #destinations = null;
+  #offers = null;
+
   constructor({event = BLANK_EVENT, destinations, offers}) {
-    this.event = event;
-    this.destinations = destinations;
-    this.offers = offers;
+    super();
+    this.#event = event;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createFormTemplate(this.event, this.destinations, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createFormTemplate(this.#event, this.#destinations, this.#offers);
   }
 }

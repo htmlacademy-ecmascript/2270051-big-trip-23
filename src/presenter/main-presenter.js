@@ -1,9 +1,8 @@
-// Импорт необходимых классов представлений и функции рендеринга
+import { render, RenderPosition } from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventView from '../view/event-view.js';
 import FormView from '../view/form-view.js';
-import { render, RenderPosition } from '../render.js';
 
 export default class MainPresenter {
   sortComponent = new SortView();
@@ -24,7 +23,7 @@ export default class MainPresenter {
     render(this.sortComponent, this.container);
 
     // Рендеринг списка путешествий
-    render(this.eventsListComponent, this.sortComponent.getElement(), RenderPosition.AFTEREND);
+    render(this.eventsListComponent, this.sortComponent.element, RenderPosition.AFTEREND);
 
     // Рендеринг формы создания/редактирования точки путешествия
     // Рендеринг точек путешествия
@@ -32,7 +31,7 @@ export default class MainPresenter {
       const view = index === 0
         ? new FormView({event, destinations: this.destinations, offers: this.offers})
         : new EventView({event, destinations: this.destinations, offers: this.offers});
-      render(view, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND);
+      render(view, this.eventsListComponent.element, RenderPosition.BEFOREEND);
     });
   }
 }
