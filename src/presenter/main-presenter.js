@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventView from '../view/event-view.js';
@@ -29,12 +29,55 @@ export default class MainPresenter {
     render(this.#eventsListComponent, this.#sortComponent.element, RenderPosition.AFTEREND);
 
     // Рендеринг формы создания/редактирования точки путешествия
+
     // Рендеринг точек путешествия
-    this.#events.forEach((event, index) => {
-      const view = index === 0
-        ? new FormView({event, destinations: this.#eventModel.destinations, offers: this.#eventModel.offers})
-        : new EventView({event, destinations: this.#eventModel.destinations, offers: this.#eventModel.offers});
-      render(view, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
+    this.#events.forEach((event) => {
+      this.#renderEvent(event);
     });
+  }
+
+  #renderEvent(event) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const eventComponent = new EventView({
+      event,
+      destinations: this.#eventModel.destinations,
+      offers: this.#eventModel.offers,
+      onEditClick: () => {
+        replaceEventToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const formComponent = new FormView({
+      event,
+      destinations: this.#eventModel.destinations,
+      offers: this.#eventModel.offers,
+      onFormSubmit: () => {
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replaceEventToForm() {
+      replace(formComponent, eventComponent);
+    }
+
+    function replaceFormToEvent () {
+      replace(eventComponent, formComponent);
+    }
+
+    render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
+  }
+
+  #renderForm(event) {
+    const formComponent = new FormView({event, destinations: this.#eventModel.destinations, offers: this.#eventModel.offers});
+    render(formComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
   }
 }
