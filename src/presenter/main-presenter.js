@@ -21,14 +21,14 @@ export default class MainPresenter {
   // Точка входа для инициализации представления
   init() {
     this.#events = [...this.#eventModel.events];
+    this.#renderContent();
+  }
 
-    // Рендеринг сортировки
+  #renderContent() {
     render(this.#sortComponent, this.#container);
 
     // Рендеринг списка путешествий
     render(this.#eventsListComponent, this.#sortComponent.element, RenderPosition.AFTEREND);
-
-    // Рендеринг формы создания/редактирования точки путешествия
 
     // Рендеринг точек путешествия
     this.#events.forEach((event) => {
@@ -62,6 +62,10 @@ export default class MainPresenter {
       onFormSubmit: () => {
         replaceFormToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onEditClick: () => {
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
 
@@ -74,10 +78,5 @@ export default class MainPresenter {
     }
 
     render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
-  }
-
-  #renderForm(event) {
-    const formComponent = new FormView({event, destinations: this.#eventModel.destinations, offers: this.#eventModel.offers});
-    render(formComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
   }
 }

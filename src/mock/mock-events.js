@@ -34,9 +34,8 @@ const mockEvents = [
     dateFrom: '2019-09-15T08:15:56.845Z',
     dateTo: '2019-09-17T04:55:13.375Z',
     destination: mockDestinations[2].id,
-    isFavorite: false,
+    isFavorite: true,
     offers: [
-      mockOffers[2].offers[0].id,
       mockOffers[2].offers[2].id
     ],
     type: mockOffers[2].type
