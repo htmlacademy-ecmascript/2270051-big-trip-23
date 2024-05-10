@@ -94,4 +94,10 @@ export default class MainPresenter {
 
     render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
   }
+
+  updateView() {
+    this.#eventModel.updateEvents();
+    this.#container.innerHTML = '';
+    this.#renderContent();
+  }
 }

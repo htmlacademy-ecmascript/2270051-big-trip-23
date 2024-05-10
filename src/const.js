@@ -25,7 +25,4 @@ const EventEmptyMessages = {
   [Filters.PAST]: 'There are no past events now'
 };
 
-// Определение текущего фильтра
-const currentFilter = Filters.EVERYTHING;
-
-export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages, currentFilter };
+export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages };

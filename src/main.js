@@ -3,7 +3,7 @@ import MainPresenter from './presenter/main-presenter.js';
 import TripInfoView from './view/trip-info-view.js';
 import FilterView from './view/filter-view.js';
 import EventModel from './model/event-model.js';
-import { Filters, currentFilter } from './const.js';
+import { Filters } from './const.js';
 
 // Поиск элементов в DOM, которые будут использоваться для рендеринга компонентов шапки сайта
 const tripMainElement = document.querySelector('.trip-main');
@@ -13,9 +13,6 @@ const tripEventsElement = document.querySelector('.trip-events');
 // Рендеринг шапки сайта
 render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 
-// Рендеринг фильтров
-render(new FilterView({ filters: Object.values(Filters), currentFilter }), tripFiltersElement);
-
 // Создание экземпляра EventModel
 const eventModel = new EventModel();
 
@@ -24,5 +21,18 @@ const mainPresenter = new MainPresenter({
   container: tripEventsElement,
   eventModel
 });
+
+// Создание экземпляра FilterView с обработчиком изменения фильтра
+const filterView = new FilterView({
+  filters: Object.values(Filters),
+  currentFilter: eventModel.filter,
+  onFilterChange: (filter) => {
+    eventModel.setFilter(filter);
+    mainPresenter.updateView();
+  }
+});
+
+// Рендеринг фильтров
+render(filterView, tripFiltersElement);
 
 mainPresenter.init();

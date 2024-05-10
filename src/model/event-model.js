@@ -10,7 +10,7 @@ export default class EventModel {
   #filter = Filters.EVERYTHING; // Установка фильтра по умолчанию
 
   get events() {
-    return this.getFilteredEvents(); // Возвращаем отфильтрованные события
+    return this.#events;
   }
 
   get offers() {
@@ -43,5 +43,10 @@ export default class EventModel {
       default:
         return this.#events;
     }
+  }
+
+  updateEvents() {
+    // Обновление данных в зависимости от фильтра
+    this.#events = this.getFilteredEvents();
   }
 }
