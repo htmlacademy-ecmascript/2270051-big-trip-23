@@ -3,6 +3,10 @@ import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventView from '../view/event-view.js';
 import FormView from '../view/form-view.js';
+import EventEmptyView from '../view/event-empty-view.js';
+
+// Функция для проверки, пуст ли массив
+const isEmpty = (array) => !(array && array.length > 0);
 
 export default class MainPresenter {
   #container = null;
@@ -24,7 +28,18 @@ export default class MainPresenter {
     this.#renderContent();
   }
 
+  #renderEventEmptyView() {
+    render(new EventEmptyView({filter: this.#eventModel.filter}), this.#container);
+  }
+
   #renderContent() {
+    const events = this.#eventModel.getFilteredEvents();
+
+    if (isEmpty(events)) {
+      this.#renderEventEmptyView();
+      return;
+    }
+
     render(this.#sortComponent, this.#container);
 
     // Рендеринг списка путешествий
