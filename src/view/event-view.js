@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getFormattedDate, getDuration, getActiveClass } from '../utils.js';
 
 const createOffersTemplate = (offers) => {
@@ -71,26 +71,28 @@ const createEventTemplate = (event, destinations, offers) => {
     </li>`);
 };
 
-export default class EventView {
-  constructor({event, destinations, offers}) {
-    this.event = event;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class EventView extends AbstractView {
+  #event = null;
+  #destinations = null;
+  #offers = null;
+  #handleEditClick = null;
+
+  constructor({event, destinations, offers, onEditClick}) {
+    super();
+    this.#event = event;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getTemplate() {
-    return createEventTemplate(this.event, this.destinations, this.offers);
+  get template() {
+    return createEventTemplate(this.#event, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

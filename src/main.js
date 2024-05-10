@@ -1,7 +1,7 @@
+import { render, RenderPosition } from './framework/render.js';
 import MainPresenter from './presenter/main-presenter.js';
 import TripInfoView from './view/trip-info-view.js';
 import FilterView from './view/filter-view.js';
-import { render, RenderPosition } from './render.js';
 import EventModel from './model/event-model.js';
 
 // Поиск элементов в DOM, которые будут использоваться для рендеринга компонентов шапки сайта

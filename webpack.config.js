@@ -64,6 +64,12 @@ module.exports = {
           },
         },
       },
+      {
+        // Применение правила к файлам с расширением .css
+        test: /\.css$/i,
+        // Сначала css-loader будет интерпретировать CSS-модули, а затем style-loader добавит эти стили в DOM
+        use: ["style-loader", "css-loader"]
+      }
     ]
   }
 };
