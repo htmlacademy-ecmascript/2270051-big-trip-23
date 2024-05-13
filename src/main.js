@@ -28,8 +28,8 @@ const filterView = new FilterView({
   currentFilter: eventModel.filter,
   onFilterChange: (filter) => {
     eventModel.setFilter(filter);
-    mainPresenter.updateView();
-  }
+  },
+  isDisabled: !eventModel.hasEvents() // Установка значения для отключения фильтров
 });
 
 // Рендеринг фильтров

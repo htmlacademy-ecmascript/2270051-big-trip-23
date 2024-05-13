@@ -33,7 +33,7 @@ export default class MainPresenter {
   }
 
   #renderContent() {
-    const events = this.#eventModel.getFilteredEvents();
+    const events = this.#eventModel.events;
 
     if (isEmpty(events)) {
       this.#renderEventEmptyView();
@@ -93,11 +93,5 @@ export default class MainPresenter {
     }
 
     render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
-  }
-
-  updateView() {
-    this.#eventModel.updateEvents();
-    this.#container.innerHTML = '';
-    this.#renderContent();
   }
 }

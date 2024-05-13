@@ -29,24 +29,8 @@ export default class EventModel {
     this.#filter = filter;
   }
 
-  getFilteredEvents() {
-    const now = new Date();
-    switch (this.#filter) {
-      case Filters.EVERYTHING:
-        return this.#events;
-      case Filters.FUTURE:
-        return this.#events.filter((event) => new Date(event.dateFrom) > now);
-      case Filters.PRESENT:
-        return this.#events.filter((event) => new Date(event.dateFrom) <= now && new Date(event.dateTo) >= now);
-      case Filters.PAST:
-        return this.#events.filter((event) => new Date(event.dateTo) < now);
-      default:
-        return this.#events;
-    }
-  }
-
-  updateEvents() {
-    // Обновление данных в зависимости от фильтра
-    this.#events = this.getFilteredEvents();
+  hasEvents() {
+    return this.#events.length > 0;
   }
 }
+
