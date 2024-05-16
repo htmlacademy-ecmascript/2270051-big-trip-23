@@ -37,20 +37,9 @@ const getDuration = (dateFrom, dateTo) => {
 // Функция получения активного класса
 const getActiveClass = (isActive, activeClass) => isActive ? activeClass : '';
 
-const isEventFuture = (dateFrom) => {
-  const now = new Date();
-  return new Date(dateFrom) > now;
-};
-
-const isEventPresent = (dateFrom, dateTo) => {
-  const now = new Date();
-  return new Date(dateFrom) <= now && new Date(dateTo) >= now;
-};
-
-const isEventPast = (dateTo) => {
-  const now = new Date();
-  return new Date(dateTo) < now;
-};
+const isEventFuture = (dateFrom) => new Date(dateFrom) > new Date();
+const isEventPresent = (dateFrom, dateTo) => new Date(dateFrom) <= new Date() && new Date(dateTo) >= new Date();
+const isEventPast = (dateTo) => new Date(dateTo) < new Date();
 
 const filter = {
   [Filters.EVERYTHING]: (events) => events,

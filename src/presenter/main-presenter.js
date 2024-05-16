@@ -28,15 +28,11 @@ export default class MainPresenter {
     this.#renderContent();
   }
 
-  #renderEventEmptyView() {
-    render(new EventEmptyView({filter: this.#eventModel.filter}), this.#container);
-  }
-
   #renderContent() {
     const events = this.#eventModel.events;
 
     if (isEmpty(events)) {
-      this.#renderEventEmptyView();
+      render(new EventEmptyView({filter: this.#eventModel.filter}), this.#container);
       return;
     }
 

@@ -3,6 +3,7 @@ import MainPresenter from './presenter/main-presenter.js';
 import TripInfoView from './view/trip-info-view.js';
 import FilterView from './view/filter-view.js';
 import EventModel from './model/event-model.js';
+import FilterModel from './model/filter-model.js';
 import { Filters } from './const.js';
 
 // Поиск элементов в DOM, которые будут использоваться для рендеринга компонентов шапки сайта
@@ -16,20 +17,24 @@ render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 // Создание экземпляра EventModel
 const eventModel = new EventModel();
 
+// Создание экземпляра FilterModel
+const filterModel = new FilterModel();
+
 // Создание экземпляра MainPresenter
 const mainPresenter = new MainPresenter({
   container: tripEventsElement,
-  eventModel
+  eventModel,
+  filterModel
 });
 
 // Создание экземпляра FilterView с обработчиком изменения фильтра
 const filterView = new FilterView({
   filters: Object.values(Filters),
-  currentFilter: eventModel.filter,
+  currentFilter: filterModel.filter,
   onFilterChange: (filter) => {
-    eventModel.setFilter(filter);
+    filterModel.setFilter(filter);
   },
-  isDisabled: !eventModel.hasEvents() // Установка значения для отключения фильтров
+  isDisabled: !eventModel.hasEvents()
 });
 
 // Рендеринг фильтров
