@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { Filters } from './const.js';
 dayjs.extend(duration);
 
 const getRandomArrayElement = ((items) => items[Math.floor(Math.random() * items.length)]);
@@ -36,4 +37,15 @@ const getDuration = (dateFrom, dateTo) => {
 // Функция получения активного класса
 const getActiveClass = (isActive, activeClass) => isActive ? activeClass : '';
 
-export { getRandomArrayElement, getFormattedDate, getDuration, getActiveClass };
+const isEventFuture = (dateFrom) => new Date(dateFrom) > new Date();
+const isEventPresent = (dateFrom, dateTo) => new Date(dateFrom) <= new Date() && new Date(dateTo) >= new Date();
+const isEventPast = (dateTo) => new Date(dateTo) < new Date();
+
+const filter = {
+  [Filters.EVERYTHING]: (events) => events,
+  [Filters.FUTURE]: (events) => events.filter((event) => isEventFuture(event.dateFrom)),
+  [Filters.PRESENT]: (events) => events.filter((event) => isEventPresent(event.dateFrom, event.dateTo)),
+  [Filters.PAST]: (events) => events.filter((event) => isEventPast(event.dateTo))
+};
+
+export { getRandomArrayElement, getFormattedDate, getDuration, getActiveClass, filter };

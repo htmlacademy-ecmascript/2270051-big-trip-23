@@ -19,4 +19,9 @@ export default class EventModel {
   get destinations() {
     return this.#destinations;
   }
+
+  hasEvents() {
+    return this.#events.length > 0;
+  }
 }
+
