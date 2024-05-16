@@ -1,9 +1,10 @@
-import { render, replace, RenderPosition } from '../framework/render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
-import EventView from '../view/event-view.js';
-import FormView from '../view/form-view.js';
+// import EventView from '../view/event-view.js';
+// import FormView from '../view/form-view.js';
 import EventEmptyView from '../view/event-empty-view.js';
+import EventPresenter from './event-presenter.js';
 
 // Функция для проверки, пуст ли массив
 const isEmpty = (array) => !(array && array.length > 0);
@@ -48,46 +49,56 @@ export default class MainPresenter {
   }
 
   #renderEvent(event) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const eventComponent = new EventView({
+    const eventPresenter = new EventPresenter({
+      container: this.#eventsListComponent.element,
       event,
       destinations: this.#eventModel.destinations,
-      offers: this.#eventModel.offers,
-      onEditClick: () => {
-        replaceEventToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+      offers: this.#eventModel.offers
     });
-
-    const formComponent = new FormView({
-      event,
-      destinations: this.#eventModel.destinations,
-      offers: this.#eventModel.offers,
-      onFormSubmit: () => {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onEditClick: () => {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceEventToForm() {
-      replace(formComponent, eventComponent);
-    }
-
-    function replaceFormToEvent () {
-      replace(eventComponent, formComponent);
-    }
-
-    render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
+    eventPresenter.init();
   }
 }
+
+// #renderEvent(event) {
+//   const escKeyDownHandler = (evt) => {
+//     if (evt.key === 'Escape') {
+//       evt.preventDefault();
+//       replaceFormToEvent();
+//       document.removeEventListener('keydown', escKeyDownHandler);
+//     }
+//   };
+//
+//   const eventComponent = new EventView({
+//     event,
+//     destinations: this.#eventModel.destinations,
+//     offers: this.#eventModel.offers,
+//     onEditClick: () => {
+//       replaceEventToForm();
+//       document.addEventListener('keydown', escKeyDownHandler);
+//     }
+//   });
+//
+//   const formComponent = new FormView({
+//     event,
+//     destinations: this.#eventModel.destinations,
+//     offers: this.#eventModel.offers,
+//     onFormSubmit: () => {
+//       replaceFormToEvent();
+//       document.removeEventListener('keydown', escKeyDownHandler);
+//     },
+//     onEditClick: () => {
+//       replaceFormToEvent();
+//       document.removeEventListener('keydown', escKeyDownHandler);
+//     }
+//   });
+//
+//   function replaceEventToForm() {
+//     replace(formComponent, eventComponent);
+//   }
+//
+//   function replaceFormToEvent () {
+//     replace(eventComponent, formComponent);
+//   }
+//
+//   render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
+// }
