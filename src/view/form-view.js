@@ -200,8 +200,7 @@ export default class FormView extends AbstractView {
     this.#handleFormSubmit();
   };
 
-  #editClickHandler = (evt) => {
-    evt.preventDefault();
+  #editClickHandler = () => {
     this.#handleEditClick();
   };
 }

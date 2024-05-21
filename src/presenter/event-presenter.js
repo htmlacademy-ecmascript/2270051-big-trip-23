@@ -1,6 +1,7 @@
 import { render, replace, RenderPosition } from '../framework/render.js';
 import EventView from '../view/event-view.js';
 import FormView from '../view/form-view.js';
+import { updateItem} from '../utils.js';
 
 export default class EventPresenter {
   #container = null;
@@ -9,25 +10,33 @@ export default class EventPresenter {
   #offers = [];
   #eventView = null;
   #formView = null;
+  #handleEventUpdate = null;
 
-  constructor({container, event, destinations, offers}) {
+  constructor({container, destinations, offers, onEventUpdate}) {
     this.#container = container;
-    this.#event = event;
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#handleEventUpdate = onEventUpdate;
   }
 
-  init() {
+  init(event) {
+    this.#event = event;
     this.#renderEvent(this.#event, this.#destinations, this.#offers);
   }
 
   #renderEvent(event, destinations, offers) {
+    const prevEventView = this.#eventView;
+
     this.#eventView = new EventView({
       event,
       destinations,
       offers,
       onEditClick: () => {
         this.#replaceEventToForm();
+      },
+      onFavoriteClick: () => {
+        const updateEvent = updateItem(event, {isFavorite: !event.isFavorite});
+        this.#handleEventUpdate(updateEvent);
       }
     });
 
@@ -43,7 +52,12 @@ export default class EventPresenter {
       }
     });
 
-    render(this.#eventView, this.#container, RenderPosition.BEFOREEND);
+    if (prevEventView === null) {
+      render(this.#eventView, this.#container, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this.#eventView, prevEventView);
   }
 
   #replaceEventToForm() {

@@ -48,4 +48,8 @@ const filter = {
   [Filters.PAST]: (events) => events.filter((event) => isEventPast(event.dateTo))
 };
 
-export { getRandomArrayElement, getFormattedDate, getDuration, getActiveClass, filter };
+// Функции для обновления точек маршрута
+const updateData = (data, update) => data.map((item) => item.id === update.id ? update : item);
+const updateItem = (item, prop) => ({...item, ...prop});
+
+export { getRandomArrayElement, getFormattedDate, getDuration, getActiveClass, filter, updateData, updateItem };

@@ -3,6 +3,7 @@ import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import EventEmptyView from '../view/event-empty-view.js';
 import EventPresenter from './event-presenter.js';
+import { updateData } from '../utils.js';
 
 // Функция для проверки, пуст ли массив
 const isEmpty = (array) => !(array && array.length > 0);
@@ -10,10 +11,9 @@ const isEmpty = (array) => !(array && array.length > 0);
 export default class MainPresenter {
   #container = null;
   #eventModel = null;
-
+  #eventPresenter = new Map();
   #sortComponent = new SortView();
   #eventsListComponent = new EventsListView();
-
   #events = [];
 
   constructor({container, eventModel}) {
@@ -51,8 +51,16 @@ export default class MainPresenter {
       container: this.#eventsListComponent.element,
       event,
       destinations: this.#eventModel.destinations,
-      offers: this.#eventModel.offers
+      offers: this.#eventModel.offers,
+      onEventUpdate: this.#handleDataChange
     });
-    eventPresenter.init();
+
+    eventPresenter.init(event);
+    this.#eventPresenter.set(event.id, eventPresenter);
   }
+
+  #handleDataChange = (updateItem) => {
+    this.#events = updateData(this.#events, updateItem);
+    this.#eventPresenter.get(updateItem.id).init(updateItem);
+  };
 }
