@@ -5,10 +5,8 @@ import FormView from '../view/form-view.js';
 export default class EventPresenter {
   #container = null;
   #event = null;
-  #destinations = null;
-  #offers = null;
-  #eventComponent = null;
-  #formComponent = null;
+  #destinations = [];
+  #offers = [];
 
   constructor({container, event, destinations, offers}) {
     this.#container = container;
@@ -18,44 +16,45 @@ export default class EventPresenter {
   }
 
   init() {
-    this.#renderEvent();
+    this.#renderEvent(this.#event, this.#destinations, this.#offers);
   }
 
-  #renderEvent() {
-    this.#eventComponent = new EventView({
-      event: this.#event,
-      destinations: this.#destinations,
-      offers: this.#offers,
-      onEditClick: this.#handleEditClick
+  #renderEvent(event, destinations, offers) {
+    const eventView = new EventView({
+      event,
+      destinations,
+      offers,
+      onEditClick: () => {
+        replaceEventToForm();
+      }
     });
 
-    render(this.#eventComponent, this.#container, RenderPosition.BEFOREEND);
-  }
-
-  #handleEditClick = () => {
-    this.#formComponent = new FormView({
-      event: this.#event,
-      destinations: this.#destinations,
-      offers: this.#offers,
-      onFormSubmit: this.#handleFormSubmit,
-      onEditClick: this.#handleEditClick
+    const formView = new FormView({
+      event,
+      destinations,
+      offers,
+      onFormSubmit: () => {
+        replaceFormToEvent();
+      }
     });
 
-    replace(this.#formComponent, this.#eventComponent);
-    this.#eventComponent = this.#formComponent;
-
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #handleFormSubmit = () => {
-    this.#renderEvent();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    const escKeyDownHandler = (evt) => {
       evt.preventDefault();
-      this.#handleEditClick();
+      if (evt.key === 'Escape') {
+        replaceFormToEvent();
+      }
+    };
+
+    render(eventView, this.#container, RenderPosition.BEFOREEND);
+
+    function replaceEventToForm() {
+      replace(formView, eventView);
+      document.addEventListener('keydown', escKeyDownHandler);
     }
-  };
+
+    function replaceFormToEvent () {
+      replace(eventView, formView);
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+  }
 }
