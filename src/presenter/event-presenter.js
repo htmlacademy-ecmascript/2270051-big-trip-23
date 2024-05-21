@@ -7,6 +7,8 @@ export default class EventPresenter {
   #event = null;
   #destinations = [];
   #offers = [];
+  #eventView = null;
+  #formView = null;
 
   constructor({container, event, destinations, offers}) {
     this.#container = container;
@@ -20,43 +22,43 @@ export default class EventPresenter {
   }
 
   #renderEvent(event, destinations, offers) {
-    const eventView = new EventView({
+    this.#eventView = new EventView({
       event,
       destinations,
       offers,
       onEditClick: () => {
-        replaceEventToForm();
+        this.#replaceEventToForm();
       }
     });
 
-    const formView = new FormView({
+    this.#formView = new FormView({
       event,
       destinations,
       offers,
       onFormSubmit: () => {
-        replaceFormToEvent();
+        this.#replaceFormToEvent();
       },
       onEditClick: () => {
-        replaceFormToEvent();
+        this.#replaceFormToEvent();
       }
     });
 
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        replaceFormToEvent();
-      }
-    };
-
-    render(eventView, this.#container, RenderPosition.BEFOREEND);
-
-    function replaceEventToForm() {
-      replace(formView, eventView);
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-
-    function replaceFormToEvent () {
-      replace(eventView, formView);
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
+    render(this.#eventView, this.#container, RenderPosition.BEFOREEND);
   }
+
+  #replaceEventToForm() {
+    replace(this.#formView, this.#eventView);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #replaceFormToEvent () {
+    replace(this.#eventView, this.#formView);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      this.#replaceFormToEvent();
+    }
+  };
 }
