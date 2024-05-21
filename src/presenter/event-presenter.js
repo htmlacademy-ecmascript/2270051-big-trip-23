@@ -35,11 +35,13 @@ export default class EventPresenter {
       offers,
       onFormSubmit: () => {
         replaceFormToEvent();
+      },
+      onEditClick: () => {
+        replaceFormToEvent();
       }
     });
 
     const escKeyDownHandler = (evt) => {
-      evt.preventDefault();
       if (evt.key === 'Escape') {
         replaceFormToEvent();
       }
