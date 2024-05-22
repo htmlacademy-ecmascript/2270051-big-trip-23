@@ -5,7 +5,6 @@ import EventEmptyView from '../view/event-empty-view.js';
 import EventPresenter from './event-presenter.js';
 import { updateData } from '../utils.js';
 
-// Функция для проверки, пуст ли массив
 const isEmpty = (array) => !(array && array.length > 0);
 
 export default class MainPresenter {
@@ -21,11 +20,19 @@ export default class MainPresenter {
     this.#eventModel = eventModel;
   }
 
-  // Точка входа для инициализации представления
   init() {
     this.#events = [...this.#eventModel.events];
     this.#renderContent();
   }
+
+  #handleDataChange = (updateItem) => {
+    this.#events = updateData(this.#events, updateItem);
+    this.#eventPresenter.get(updateItem.id).init(updateItem);
+  };
+
+  #handleNodeChange = () => {
+    this.#eventPresenter.forEach((presenter) => presenter.resetView());
+  };
 
   #renderContent() {
     const events = this.#eventModel.events;
@@ -36,11 +43,8 @@ export default class MainPresenter {
     }
 
     render(this.#sortComponent, this.#container);
-
-    // Рендеринг списка путешествий
     render(this.#eventsListComponent, this.#sortComponent.element, RenderPosition.AFTEREND);
 
-    // Рендеринг точек путешествия
     this.#events.forEach((event) => {
       this.#renderEvent(event);
     });
@@ -52,15 +56,11 @@ export default class MainPresenter {
       event,
       destinations: this.#eventModel.destinations,
       offers: this.#eventModel.offers,
-      onEventUpdate: this.#handleDataChange
+      onDataChange: this.#handleDataChange,
+      onModeChange: this.#handleNodeChange
     });
 
     eventPresenter.init(event);
     this.#eventPresenter.set(event.id, eventPresenter);
   }
-
-  #handleDataChange = (updateItem) => {
-    this.#events = updateData(this.#events, updateItem);
-    this.#eventPresenter.get(updateItem.id).init(updateItem);
-  };
 }

@@ -25,4 +25,9 @@ const EventEmptyMessages = {
   [Filters.PAST]: 'There are no past events now'
 };
 
-export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages, Mode };
