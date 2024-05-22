@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getFormattedDate, getDuration, getActiveClass } from '../utils.js';
+import { getFormattedDate, getDuration, getActiveClass } from '../utils/utils.js';
 
 const createOffersTemplate = (offers) => {
   if (!offers || offers.length === 0) {

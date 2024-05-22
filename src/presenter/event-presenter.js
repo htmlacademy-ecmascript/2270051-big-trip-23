@@ -1,7 +1,7 @@
 import { render, replace, RenderPosition } from '../framework/render.js';
 import EventView from '../view/event-view.js';
 import FormView from '../view/form-view.js';
-import { updateItem } from '../utils.js';
+import { updateItem } from '../utils/utils.js';
 import { Mode } from '../const.js';
 
 export default class EventPresenter {
