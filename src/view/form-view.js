@@ -2,17 +2,14 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { BLANK_EVENT } from '../const.js';
 import { getFormattedDate } from '../utils.js';
 
-// Функция создания разметки выбора типа точки маршрута
 const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
     <input id="event-type-${eventType}-${eventId}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${eventType}" ${eventType === type ? 'checked' : ''}>
     <label class="event__type-label  event__type-label--${eventType}" for="event-type-${eventType}-${eventId}">${eventType.charAt(0).toUpperCase() + eventType.slice(1)}</label>
   </div>`;
 
-// Функция создания элемента выпадающего списка городов для <datalist>
 const createDestinationOptionTemplate = (name) => `<option value="${name}"></option>`;
 
-// Функция создания разметки для отдельной дополнительной опции
 const createOffersItemTemplate = ({id, title, price, checked}) => `
   <div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${checked ? 'checked' : ''}>
@@ -23,10 +20,9 @@ const createOffersItemTemplate = ({id, title, price, checked}) => `
     </label>
   </div>`;
 
-// Функция создания разметки дополнительных опций
 const createOffersTemplate = (allOffers, eventOffers) => {
   if (!allOffers || allOffers.length === 0) {
-    return ''; // Возвращаем пустую строку, если offers пуст или не существует
+    return '';
   }
 
   const offersTemplate = allOffers.reduce((acc, offer) => {
@@ -44,14 +40,11 @@ const createOffersTemplate = (allOffers, eventOffers) => {
     </section>`;
 };
 
-// Функция создания картинок места назначения
 const createPhotosTemplate = (photos) => {
-  // Создаем картинки
   const photosList = photos.map((photo) => `
     <img class="event__photo" src="${photo.src}" alt="${photo.description}">`
   ).join('');
 
-  // Возвращаем обернутый блок картинок
   return `
     <div class="event__photos-container">
       <div class="event__photos-tape">
@@ -60,13 +53,11 @@ const createPhotosTemplate = (photos) => {
     </div>`;
 };
 
-// Функция создания разметки места назначения
 const createDestinationTemplate = (description, photos) => {
   if (!description || description.length === 0) {
-    return ''; // Возвращаем пустую строку, если description пуст или не существует
+    return '';
   }
 
-  // Возвращаем блок разметки места назначения
   return `
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -75,29 +66,15 @@ const createDestinationTemplate = (description, photos) => {
   </section>`;
 };
 
-// Функция создания разметки всей формы
 const createFormTemplate = (event, destinations, offers) => {
   const {type, dateFrom, dateTo, basePrice} = event;
-
   const eventId = event.id || 0;
-
-  // Получаем все типы точек маршрутов для выпадающего списка
   const eventTypes = offers.map((offer) => offer.type);
-
-  // Получаем все названия точек маршрутов для выпадающего списка
   const destinationNames = destinations.map((destination) => destination.name);
-
-  // Ищем место назначения для данной точки маршрута
   const eventDestination = destinations.find((destination) => destination.id === event.destination);
-
-  // Ищем сначала все дополнительные опции для данной точки маршрута, потом те, что были выбраны
   const eventAllOffers = offers.find((offer) => offer.type === event.type)?.offers || [];
   const eventOffers = event.offers.map((offerId) => eventAllOffers.find((offer) => offer.id === offerId)).filter(Boolean);
-
-  // Отрисовка блока дополнительных опций
   const offersTemplate = createOffersTemplate(eventAllOffers, eventOffers);
-
-  // Отрисовка блока места назначения
   const destinationTemplate = createDestinationTemplate(eventDestination.description, eventDestination.pictures);
 
   return (
@@ -200,8 +177,7 @@ export default class FormView extends AbstractView {
     this.#handleFormSubmit();
   };
 
-  #editClickHandler = (evt) => {
-    evt.preventDefault();
+  #editClickHandler = () => {
     this.#handleEditClick();
   };
 }

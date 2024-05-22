@@ -1,5 +1,5 @@
 const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
-const EVENT_COUNT = 4;
+const EVENT_COUNT = 3;
 const PHOTO_URL = 'https://loremflickr.com/248/152?random=';
 
 const BLANK_EVENT = {
@@ -25,4 +25,9 @@ const EventEmptyMessages = {
   [Filters.PAST]: 'There are no past events now'
 };
 
-export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages, Mode };

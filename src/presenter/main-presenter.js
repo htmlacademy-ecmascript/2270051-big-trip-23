@@ -1,20 +1,18 @@
-import { render, replace, RenderPosition } from '../framework/render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
-import EventView from '../view/event-view.js';
-import FormView from '../view/form-view.js';
 import EventEmptyView from '../view/event-empty-view.js';
+import EventPresenter from './event-presenter.js';
+import { updateData } from '../utils.js';
 
-// Функция для проверки, пуст ли массив
 const isEmpty = (array) => !(array && array.length > 0);
 
 export default class MainPresenter {
   #container = null;
   #eventModel = null;
-
+  #eventPresenter = new Map();
   #sortComponent = new SortView();
   #eventsListComponent = new EventsListView();
-
   #events = [];
 
   constructor({container, eventModel}) {
@@ -22,11 +20,19 @@ export default class MainPresenter {
     this.#eventModel = eventModel;
   }
 
-  // Точка входа для инициализации представления
   init() {
     this.#events = [...this.#eventModel.events];
     this.#renderContent();
   }
+
+  #handleDataChange = (updateItem) => {
+    this.#events = updateData(this.#events, updateItem);
+    this.#eventPresenter.get(updateItem.id).init(updateItem);
+  };
+
+  #handleNodeChange = () => {
+    this.#eventPresenter.forEach((presenter) => presenter.resetView());
+  };
 
   #renderContent() {
     const events = this.#eventModel.events;
@@ -37,57 +43,24 @@ export default class MainPresenter {
     }
 
     render(this.#sortComponent, this.#container);
-
-    // Рендеринг списка путешествий
     render(this.#eventsListComponent, this.#sortComponent.element, RenderPosition.AFTEREND);
 
-    // Рендеринг точек путешествия
     this.#events.forEach((event) => {
       this.#renderEvent(event);
     });
   }
 
   #renderEvent(event) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const eventComponent = new EventView({
+    const eventPresenter = new EventPresenter({
+      container: this.#eventsListComponent.element,
       event,
       destinations: this.#eventModel.destinations,
       offers: this.#eventModel.offers,
-      onEditClick: () => {
-        replaceEventToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+      onDataChange: this.#handleDataChange,
+      onModeChange: this.#handleNodeChange
     });
 
-    const formComponent = new FormView({
-      event,
-      destinations: this.#eventModel.destinations,
-      offers: this.#eventModel.offers,
-      onFormSubmit: () => {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onEditClick: () => {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceEventToForm() {
-      replace(formComponent, eventComponent);
-    }
-
-    function replaceFormToEvent () {
-      replace(eventComponent, formComponent);
-    }
-
-    render(eventComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND);
+    eventPresenter.init(event);
+    this.#eventPresenter.set(event.id, eventPresenter);
   }
 }

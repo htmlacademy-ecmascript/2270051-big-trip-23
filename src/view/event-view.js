@@ -3,10 +3,9 @@ import { getFormattedDate, getDuration, getActiveClass } from '../utils.js';
 
 const createOffersTemplate = (offers) => {
   if (!offers || offers.length === 0) {
-    return ''; // Возвращаем пустую строку, если offers пуст или не существует
+    return '';
   }
 
-  // Создаем список дополнительных опций
   const offersList = offers.map((offer) => `
     <li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
@@ -14,27 +13,16 @@ const createOffersTemplate = (offers) => {
       <span class="event__offer-price">${offer.price}</span>
     </li>`).join('');
 
-  // Возвращаем обернутый список дополнительных опций внутри ul
   return `<ul class="event__selected-offers">${offersList}</ul>`;
 };
 
 const createEventTemplate = (event, destinations, offers) => {
   const {type, dateFrom, dateTo, basePrice, isFavorite} = event;
-
-  // Ищем место назначения для данной точки маршрута
   const eventDestination = destinations.find((destination) => destination.id === event.destination);
-
-  // Проверяем, существует ли eventDestination и есть ли у него имя
   const eventDestinationName = eventDestination?.name || '';
-
-  // Ищем сначала все дополнительные опции для данной точки маршрута, потом те, что были выбраны
   const eventAllOffers = offers.find((offer) => offer.type === event.type).offers;
   const eventOffers = eventAllOffers.filter((eventOffer) => event.offers.includes(eventOffer.id));
-
-  // Динамическое изменения класса кнопки "Добавить в избранное"
   const favoriteButtonClass = getActiveClass(isFavorite, 'event__favorite-btn--active');
-
-  // Отрисовка блока дополнительных опций
   const offersTemplate = createOffersTemplate(eventOffers);
 
   return (
@@ -76,23 +64,35 @@ export default class EventView extends AbstractView {
   #destinations = null;
   #offers = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({event, destinations, offers, onEditClick}) {
+  constructor({event, destinations, offers, onEditClick, onFavoriteClick}) {
     super();
     this.#event = event;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
     return createEventTemplate(this.#event, this.#destinations, this.#offers);
   }
 
-  #editClickHandler = (evt) => {
-    evt.preventDefault();
+  #editClickHandler = () => {
     this.#handleEditClick();
   };
+
+  #favoriteClickHandler = () => {
+    this.#handleFavoriteClick();
+  };
+
+  resetView() {
+    this.element.innerHTML = this.template;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+  }
 }
