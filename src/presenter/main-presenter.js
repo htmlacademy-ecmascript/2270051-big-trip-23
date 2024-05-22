@@ -78,7 +78,9 @@ export default class MainPresenter {
   }
 
   #clearContent() {
-    this.#eventsListComponent.element.innerHTML = '';
+    while (this.#eventsListComponent.element.firstChild) {
+      this.#eventsListComponent.element.removeChild(this.#eventsListComponent.element.firstChild);
+    }
   }
 
   #renderContent() {
