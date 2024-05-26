@@ -1,8 +1,7 @@
-const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
-const EVENT_COUNT = 3;
-const PHOTO_URL = 'https://loremflickr.com/248/152?random=';
+export const EVENT_COUNT = 3;
+export const PHOTO_URL = 'https://loremflickr.com/248/152?random=';
 
-const BLANK_EVENT = {
+export const BLANK_EVENT = {
   type: 'flight',
   destination: 0,
   dateFrom: new Date().toISOString(),
@@ -11,23 +10,29 @@ const BLANK_EVENT = {
   offers: []
 };
 
-const Filters = {
+export const Filters = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past'
 };
 
-const EventEmptyMessages = {
+export const EventEmptyMessages = {
   [Filters.EVERYTHING]: 'Click New Event to create your first point',
   [Filters.FUTURE]: 'There are no future events now',
   [Filters.PRESENT]: 'There are no present events now',
   [Filters.PAST]: 'There are no past events now'
 };
 
-const Mode = {
+export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
 
-export { SORT_TYPES, EVENT_COUNT, PHOTO_URL, BLANK_EVENT, Filters, EventEmptyMessages, Mode };
+export const SortTypes = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
+};

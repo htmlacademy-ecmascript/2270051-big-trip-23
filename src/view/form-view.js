@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { BLANK_EVENT } from '../const.js';
-import { getFormattedDate } from '../utils.js';
+import { getFormattedDate } from '../utils/utils.js';
 
 const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
