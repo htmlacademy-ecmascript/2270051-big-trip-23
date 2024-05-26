@@ -91,8 +91,7 @@ export default class EventView extends AbstractView {
   };
 
   resetView() {
-    this.element.innerHTML = this.template;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+    this.removeElement();
+    this.element = null;
   }
 }

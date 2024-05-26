@@ -12,7 +12,7 @@ const isEmpty = (array) => !(array && array.length > 0);
 export default class MainPresenter {
   #container = null;
   #eventModel = null;
-  #eventPresenter = new Map();
+  #eventPresenters = new Map();
   #sortComponent = null;
   #eventsListComponent = new EventsListView();
   #events = [];
@@ -34,11 +34,11 @@ export default class MainPresenter {
   #handleDataChange = (updateItem) => {
     this.#events = updateData(this.#events, updateItem);
     this.#sourcedEvents = updateData(this.#sourcedEvents, updateItem);
-    this.#eventPresenter.get(updateItem.id).init(updateItem);
+    this.#eventPresenters.get(updateItem.id).init(updateItem);
   };
 
   #handleModeChange = () => {
-    this.#eventPresenter.forEach((presenter) => presenter.resetView());
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #sortEvents(sortType) {
@@ -109,6 +109,6 @@ export default class MainPresenter {
     });
 
     eventPresenter.init(event);
-    this.#eventPresenter.set(event.id, eventPresenter);
+    this.#eventPresenters.set(event.id, eventPresenter);
   }
 }
