@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { BLANK_EVENT } from '../const.js';
-import { getFormattedDate } from '../utils/utils.js';
+import {BLANK_EVENT} from '../const.js';
+import {getFormattedDate} from '../utils/utils.js';
 
 const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
@@ -166,6 +166,8 @@ export default class FormView extends AbstractStatefulView {
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('[name="event-destination"]').addEventListener('change', this.#destinationChangeHandler);
   }
 
   get template() {
@@ -175,6 +177,8 @@ export default class FormView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('[name="event-destination"]').addEventListener('change', this.#destinationChangeHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -185,4 +189,26 @@ export default class FormView extends AbstractStatefulView {
   #editClickHandler = () => {
     this.#handleEditClick();
   };
+
+  #typeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.#event.type = evt.target.value;
+    this.updateElement(this);
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    const selectedDestinationName = evt.target.value;
+    const selectedDestination = this.#destinations.find((destination) => destination.name === selectedDestinationName);
+    this.#event.destination = selectedDestination.id;
+    this.updateElement(this);
+  };
+
+  // static parseEventToState(event) {
+  //   return {...event};
+  // }
+  //
+  // static parseStateToEvent(state) {
+  //   return {...state};
+  // }
 }
