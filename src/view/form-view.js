@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { BLANK_EVENT } from '../const.js';
 import { getFormattedDate } from '../utils/utils.js';
 
@@ -149,7 +149,7 @@ const createFormTemplate = (event, destinations, offers) => {
     </li>`);
 };
 
-export default class FormView extends AbstractView {
+export default class FormView extends AbstractStatefulView {
   #event = null;
   #destinations = null;
   #offers = null;
@@ -170,6 +170,11 @@ export default class FormView extends AbstractView {
 
   get template() {
     return createFormTemplate(this.#event, this.#destinations, this.#offers);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   #formSubmitHandler = (evt) => {
