@@ -181,7 +181,8 @@ export default class FormView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
-    this.#initDatepickers();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
   }
 
   resetForm(event) {
@@ -224,39 +225,58 @@ export default class FormView extends AbstractStatefulView {
     }
   };
 
-  #initDatepickers() {
-    const dateFromInput = this.element.querySelector(`#event-start-time-${this._state.id}`);
-    const dateToInput = this.element.querySelector(`#event-end-time-${this._state.id}`);
+  #dateFromChangeHandler = ([date]) => {
+    if (date > this._state.dateTo) {
+      this.updateElement({
+        ...this._state,
+        dateFrom: date,
+        dateTo: date
+      });
 
-    this.#dateFromPicker = flatpickr(dateFromInput, {
-      enableTime: true,
-      'time_24hr': true,
-      dateFormat: 'd/m/y h:i',
-      defaultDate: this._state.dateFrom,
+      this.#dateToPicker.setDate(date);
+    } else {
+      this.updateElement({
+        ...this._state,
+        dateFrom: date
+      });
+    }
 
-      onChange: ([date]) => {
-        this.updateElement({
-          ...this._state,
-          dateFrom: date
-        });
+    this.#dateToPicker.set('minDate', date);
+  };
 
-        this.#dateToPicker.set('minDate', date);
-      }
+  #dateToChangeHandler = ([date]) => {
+    this.updateElement({
+      ...this._state,
+      dateTo: date
     });
 
-    this.#dateToPicker = flatpickr(dateToInput, {
-      enableTime: true,
-      'time_24hr': true,
-      dateFormat: 'd/m/y h:i',
-      minDate: this._state.dateFrom,
-      defaultDate: this._state.dateTo,
+    this.#dateToPicker.setDate(date);
+  };
 
-      onChange: ([date]) => {
-        this.updateElement({
-          ...this._state,
-          dateTo: date
-        });
-      }
-    });
+  #setDateFromPicker() {
+    this.#dateFromPicker = flatpickr(
+      this.element.querySelector(`#event-start-time-${this._state.id}`),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y h:i',
+        minuteIncrement: 1,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler
+      });
+  }
+
+  #setDateToPicker() {
+    this.#dateToPicker = flatpickr(
+      this.element.querySelector(`#event-end-time-${this._state.id}`),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y h:i',
+        minuteIncrement: 1,
+        minDate: this._state.dateFrom,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler
+      });
   }
 }
