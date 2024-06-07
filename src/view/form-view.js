@@ -158,32 +158,29 @@ export default class FormView extends AbstractStatefulView {
 
   constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onEditClick}) {
     super();
-    this.#event = event;
+    this._state = {...event};
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
-
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('[name="event-destination"]').addEventListener('change', this.#destinationChangeHandler);
-  }
-
-  get template() {
-    return createFormTemplate(this.#event, this.#destinations, this.#offers);
+    this._restoreHandlers();
   }
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('[name="event-destination"]').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+  }
+
+  get template() {
+    return createFormTemplate(this._state, this.#destinations, this.#offers);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit({...this._state});
   };
 
   #editClickHandler = () => {
@@ -192,16 +189,20 @@ export default class FormView extends AbstractStatefulView {
 
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
-    this.#event.type = evt.target.value;
-    this.updateElement(this);
+    this.updateElement({
+      ...this.#event,
+      type: evt.target.value,
+      offers: []
+    });
   };
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const selectedDestinationName = evt.target.value;
-    const selectedDestination = this.#destinations.find((destination) => destination.name === selectedDestinationName);
-    this.#event.destination = selectedDestination.id;
-    this.updateElement(this);
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+    this.updateElement({
+      ...this.#event,
+      destination: selectedDestination.id
+    });
   };
 
   // static parseEventToState(event) {
