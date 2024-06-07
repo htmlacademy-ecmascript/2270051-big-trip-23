@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {BLANK_EVENT} from '../const.js';
 import {getFormattedDate} from '../utils/utils.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
@@ -155,6 +157,8 @@ export default class FormView extends AbstractStatefulView {
   #offers = null;
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onEditClick}) {
     super();
@@ -176,10 +180,14 @@ export default class FormView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+
+    this.#initDatepickers();
   }
 
   resetForm(event) {
     this.updateElement(event);
+    this.#dateFromPicker.setDate(event.dateFrom);
+    this.#dateToPicker.setDate(event.dateTo);
   }
 
   #formSubmitHandler = (evt) => {
@@ -215,4 +223,40 @@ export default class FormView extends AbstractStatefulView {
       destinationSection.style.display = 'none';
     }
   };
+
+  #initDatepickers() {
+    const dateFromInput = this.element.querySelector(`#event-start-time-${this._state.id}`);
+    const dateToInput = this.element.querySelector(`#event-end-time-${this._state.id}`);
+
+    this.#dateFromPicker = flatpickr(dateFromInput, {
+      enableTime: true,
+      'time_24hr': true,
+      dateFormat: 'd/m/y h:i',
+      defaultDate: this._state.dateFrom,
+
+      onChange: ([date]) => {
+        this.updateElement({
+          ...this._state,
+          dateFrom: date
+        });
+
+        this.#dateToPicker.set('minDate', date);
+      }
+    });
+
+    this.#dateToPicker = flatpickr(dateToInput, {
+      enableTime: true,
+      'time_24hr': true,
+      dateFormat: 'd/m/y h:i',
+      minDate: this._state.dateFrom,
+      defaultDate: this._state.dateTo,
+
+      onChange: ([date]) => {
+        this.updateElement({
+          ...this._state,
+          dateTo: date
+        });
+      }
+    });
+  }
 }
