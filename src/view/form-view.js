@@ -215,12 +215,4 @@ export default class FormView extends AbstractStatefulView {
       destinationSection.style.display = 'none';
     }
   };
-
-  // static parseEventToState(event) {
-  //   return {...event};
-  // }
-  //
-  // static parseStateToEvent(state) {
-  //   return {...state};
-  // }
 }
