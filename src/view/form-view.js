@@ -199,10 +199,17 @@ export default class FormView extends AbstractStatefulView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
     const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
-    this.updateElement({
-      ...this.#event,
-      destination: selectedDestination.id
-    });
+    const destinationSection = this.element.querySelector('.event__section--destination');
+
+    if (selectedDestination) {
+      this.updateElement({
+        ...this.#event,
+        destination: selectedDestination.id
+      });
+      destinationSection.style.display = 'block';
+    } else {
+      destinationSection.style.display = 'none';
+    }
   };
 
   // static parseEventToState(event) {
