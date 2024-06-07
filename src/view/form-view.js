@@ -166,6 +166,10 @@ export default class FormView extends AbstractStatefulView {
     this._restoreHandlers();
   }
 
+  get template() {
+    return createFormTemplate(this._state, this.#destinations, this.#offers);
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
@@ -174,8 +178,8 @@ export default class FormView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
   }
 
-  get template() {
-    return createFormTemplate(this._state, this.#destinations, this.#offers);
+  resetForm(event) {
+    this.updateElement(event);
   }
 
   #formSubmitHandler = (evt) => {
