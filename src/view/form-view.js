@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { BLANK_EVENT } from '../const.js';
-import { getFormattedDate } from '../utils/utils.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import {BLANK_EVENT} from '../const.js';
+import {getFormattedDate} from '../utils/utils.js';
 
 const createPointTemplate = (eventType, eventId, type) => `
   <div class="event__type-item">
@@ -149,7 +149,7 @@ const createFormTemplate = (event, destinations, offers) => {
     </li>`);
 };
 
-export default class FormView extends AbstractView {
+export default class FormView extends AbstractStatefulView {
   #event = null;
   #destinations = null;
   #offers = null;
@@ -158,26 +158,61 @@ export default class FormView extends AbstractView {
 
   constructor({event = BLANK_EVENT, destinations, offers, onFormSubmit, onEditClick}) {
     super();
-    this.#event = event;
+    this._state = {...event};
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
-
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this._restoreHandlers();
   }
 
   get template() {
-    return createFormTemplate(this.#event, this.#destinations, this.#offers);
+    return createFormTemplate(this._state, this.#destinations, this.#offers);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+  }
+
+  resetForm(event) {
+    this.updateElement(event);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit({...this._state});
   };
 
   #editClickHandler = () => {
     this.#handleEditClick();
+  };
+
+  #typeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      ...this.#event,
+      type: evt.target.value,
+      offers: []
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+    const destinationSection = this.element.querySelector('.event__section--destination');
+
+    if (selectedDestination) {
+      this.updateElement({
+        ...this.#event,
+        destination: selectedDestination.id
+      });
+      destinationSection.style.display = 'block';
+    } else {
+      destinationSection.style.display = 'none';
+    }
   };
 }

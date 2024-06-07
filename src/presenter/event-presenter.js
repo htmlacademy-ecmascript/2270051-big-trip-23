@@ -78,6 +78,7 @@ export default class EventPresenter {
   }
 
   #replaceFormToEvent () {
+    this.#formView.resetForm(this.#event);
     replace(this.#eventView, this.#formView);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -85,6 +86,7 @@ export default class EventPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
+      this.#formView.resetForm(this.#event);
       this.#replaceFormToEvent();
     }
   };
